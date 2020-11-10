@@ -29,6 +29,10 @@ import org.javasim.streams.UniformStream;
 
 public class Breaks extends SimulationProcess
 {
+    private UniformStream RepairTime;
+    private UniformStream OperativeTime;
+    private boolean interrupted_service;
+
     public Breaks()
     {
         RepairTime = new UniformStream(10, 100);
@@ -76,10 +80,4 @@ public class Breaks extends SimulationProcess
             }
         }
     }
-
-    private UniformStream RepairTime;
-
-    private UniformStream OperativeTime;
-
-    private boolean interrupted_service;
 }

@@ -28,6 +28,17 @@ import org.javasim.SimulationProcess;
 
 public class MachineShop extends SimulationProcess
 {
+    public static Machine M = null;
+    public static Queue JobQ = new Queue();
+    public static double TotalResponseTime = 0.0;
+    public static long TotalJobs = 0;
+    public static long ProcessedJobs = 0;
+    public static long JobsInQueue = 0;
+    public static long CheckFreq = 0;
+    public static double MachineActiveTime = 0.0;
+    public static double MachineFailedTime = 0.0;
+    private boolean useBreaks;
+
     public MachineShop(boolean isBreaks)
     {
         useBreaks = isBreaks;
@@ -102,24 +113,4 @@ public class MachineShop extends SimulationProcess
         this.resumeProcess();
         SimulationProcess.mainSuspend();
     }
-
-    public static Machine M = null;
-
-    public static Queue JobQ = new Queue();
-
-    public static double TotalResponseTime = 0.0;
-
-    public static long TotalJobs = 0;
-
-    public static long ProcessedJobs = 0;
-
-    public static long JobsInQueue = 0;
-
-    public static long CheckFreq = 0;
-
-    public static double MachineActiveTime = 0.0;
-
-    public static double MachineFailedTime = 0.0;
-
-    private boolean useBreaks;
 }

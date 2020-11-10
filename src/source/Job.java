@@ -26,6 +26,9 @@ import org.javasim.SimulationException;
 
 public class Job
 {
+    private double ResponseTime;
+    private double ArrivalTime;
+
     public Job()
     {
         boolean empty = false;
@@ -58,8 +61,4 @@ public class Job
         ResponseTime = Scheduler.currentTime() - ArrivalTime;
         MachineShop.TotalResponseTime += ResponseTime;
     }
-
-    private double ResponseTime;
-
-    private double ArrivalTime;
 }
