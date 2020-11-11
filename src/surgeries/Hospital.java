@@ -10,6 +10,13 @@ import org.javasim.SimulationProcess;
  */
 public class Hospital extends SimulationProcess {
 	
+	private int patientInterval = 25;
+	private int numPrerationUnits = 3;
+	private int prerationTime = 40;
+	private int numOperationUnits = 1;
+	private int operationTime = 20;
+	private int numRecoveryUnits = 3;
+	private int recoveryTime = 40;
 	
 	/**
 	 * run process
@@ -17,21 +24,20 @@ public class Hospital extends SimulationProcess {
 	@Override
 	public void run() {
 		try {
-			double alku = currentTime();
-			Arrivals generator = new Arrivals(1, 0.1);
+			double startTime = currentTime();
+			Arrivals generator = new Arrivals(patientInterval, 0.1);
 			generator.activate();
 			// Preparation facilities are stored to an array.
-			int preparationCapacity = 5;
-			Preparation[] preparations = new Preparation[preparationCapacity];
-			for (int i = 0; i < preparationCapacity; i++) {
-				preparations[i] = new Preparation(5);
+			Preparation[] preparations = new Preparation[numPrerationUnits];
+			for (int i = 0; i < numPrerationUnits; i++) {
+				preparations[i] = new Preparation(prerationTime);
 			}
 			Simulation.start();
 			while (Preparation.prepared() < 10000) {
 				hold(1);
 			}
-			System.out.println("Time: "+(currentTime() - alku));
-			System.out.println("Average time in queue and preparation: "+Preparation.averageTime());
+			System.out.println("Time: " + (currentTime() - startTime));
+			System.out.println("Average time in queue and preparation: " + Preparation.averageTime());
             Simulation.stop();
 			generator.terminate();
 			for (Preparation p : preparations) p.terminate();

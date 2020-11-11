@@ -9,7 +9,12 @@ import org.javasim.Scheduler;
  */
 public class Patient {
 	
-	private double arrivalTime;
+	private double preparationStartTime;
+	private double preparationEndTime;
+	private double operationStartTime;
+	private double opertationEndTime;
+	private double recoveryStartTime;
+	private double recoveryEndTime;
 	private boolean urgent;
 	
 	
@@ -19,7 +24,7 @@ public class Patient {
 	 */
 	public Patient(boolean urgent) {
 		this.urgent = urgent;
-		this.arrivalTime = Scheduler.currentTime();
+		this.preparationStartTime = Scheduler.currentTime();
 	}
 	
 	
@@ -30,13 +35,46 @@ public class Patient {
 		return urgent;
 	}
 	
+	/**
+	 * set time when preparation ended
+	 */
+	public void setPreparationEndTime(double time) {
+		this.preparationEndTime = time;
+	}
 	
 	/**
-	 * @return when the patient arrived the system
+	 * set time when operation ended
 	 */
-	public double arrivalTime() {
-		return arrivalTime;
+	public void setOperrationEndTime(double time) {
+		this.opertationEndTime = time;
 	}
-
+	
+	/**
+	 * set time when recovery ended
+	 */
+	public void setRecoveryEndTime(double time) {
+		this.recoveryEndTime = time;
+	}
+	
+	/**
+	 * @return time in preparation queue & preparation
+	 */
+	public double getPreparationTime() {
+		return this.preparationEndTime - this.preparationStartTime;
+	}
+	
+	/**
+	 * @return time in operation queue & operation
+	 */
+	public double getOperationTime() {
+		return this.opertationEndTime - this.operationStartTime;
+	}
+	
+	/**
+	 * @return time in recovery queue & recovery
+	 */
+	public double getRecoveryTime() {
+		return this.recoveryEndTime - this.recoveryStartTime;
+	}
 
 }

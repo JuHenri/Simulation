@@ -62,7 +62,8 @@ public class Preparation extends SimulationProcess {
 					double t = preparationTime.getNumber();
 					hold(t);
 					prepared++;
-					totalTime += currentTime() - p.arrivalTime();
+					p.setPreparationEndTime(currentTime());
+					totalTime += p.getPreparationTime();
 				} catch (ArithmeticException | SimulationException | RestartException | IOException e) {
 					e.printStackTrace();
 				}
