@@ -12,7 +12,7 @@ public class Hospital extends SimulationProcess {
 	
 	private int patientInterval = 25;
 	private int numPrerationUnits = 3;
-	private int prerationTime = 40;
+	private int prerationTime = 80;
 	private int numOperationUnits = 1;
 	private int operationTime = 20;
 	private int numRecoveryUnits = 3;
@@ -32,12 +32,16 @@ public class Hospital extends SimulationProcess {
 			for (int i = 0; i < numPrerationUnits; i++) {
 				preparations[i] = new Preparation(prerationTime);
 			}
+			Operation op = new Operation();
 			Simulation.start();
 			while (Preparation.prepared() < 10000) {
 				hold(1);
+                op.activate();
 			}
-			System.out.println("Time: " + (currentTime() - startTime));
-			System.out.println("Average time in queue and preparation: " + Preparation.averageTime());
+			System.out.println("Time: "+(currentTime() - startTime));
+			System.out.println("Average time in queue and preparation: "+Preparation.averageTime());
+			System.out.println("Total time spent in surgery for all patients: "+op.totalSurgeryTime());
+			System.out.println("Patients operated: "+op.PatientsOperated());
             Simulation.stop();
 			generator.terminate();
 			for (Preparation p : preparations) p.terminate();

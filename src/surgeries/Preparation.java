@@ -19,6 +19,7 @@ public class Preparation extends SimulationProcess {
 	
 	// Queue is implemented using the standard libraries of Java. Free facilities are collected to a stack.
 	private static final Queue<Patient> QUEUE = new ArrayDeque<Patient>();
+	private static final Queue<Patient> surgery_queue = new ArrayDeque<Patient>();
 	private static Stack<Preparation> free = new Stack<Preparation>();
 	// The number of preparated patients and (temporare) throughput time are kept in this class.
 	private static int prepared = 0;
@@ -50,6 +51,13 @@ public class Preparation extends SimulationProcess {
 		}
 	}
 	
+	/**
+	 * @return returns the next ready patient for surgery.
+	 */
+	public static Patient getPatientForSurgery() {
+	       return surgery_queue.poll();
+	    }
+	
 	
 	/**
 	 * the running process
@@ -64,6 +72,7 @@ public class Preparation extends SimulationProcess {
 					prepared++;
 					p.setPreparationEndTime(currentTime());
 					totalTime += p.getPreparationTime();
+					surgery_queue.add(p);
 				} catch (ArithmeticException | SimulationException | RestartException | IOException e) {
 					e.printStackTrace();
 				}
@@ -92,4 +101,13 @@ public class Preparation extends SimulationProcess {
 	public static double averageTime() {
 		return totalTime/prepared;
 	}
+
+
+    /**
+     * @return returns boolean telling if there is a prepared patient.
+     */
+    public static boolean hasNextPatient() {
+        if (!surgery_queue.isEmpty()) return true;
+        return false;
+    }
 }
