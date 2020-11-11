@@ -12,7 +12,7 @@ public class Patient {
 	private double preparationStartTime;
 	private double preparationEndTime;
 	private double operationStartTime;
-	private double opertationEndTime;
+	private double operationEndTime;
 	private double recoveryStartTime;
 	private double recoveryEndTime;
 	private boolean urgent;
@@ -46,7 +46,7 @@ public class Patient {
 	 * set time when operation ended
 	 */
 	public void setOperrationEndTime(double time) {
-		this.opertationEndTime = time;
+		this.operationEndTime = time;
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class Patient {
 	 * @return time in operation queue & operation
 	 */
 	public double getOperationTime() {
-		return this.opertationEndTime - this.operationStartTime;
+		return this.operationEndTime - this.operationStartTime;
 	}
 	
 	/**
