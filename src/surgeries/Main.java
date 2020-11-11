@@ -8,7 +8,7 @@ package surgeries;
 public class Main {
 	
     public static void main (String[] args) {
-        MachineShop m = new MachineShop();
+        Hospital m = new Hospital();
         m.await();
         System.exit(0);
     }

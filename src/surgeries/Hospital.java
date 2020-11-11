@@ -8,7 +8,7 @@ import org.javasim.SimulationProcess;
  * The process coordinating the whole simulation
  * @author Ilari Kauko
  */
-public class MachineShop extends SimulationProcess {
+public class Hospital extends SimulationProcess {
 	
 	
 	/**
