@@ -36,6 +36,8 @@ public class Hospital extends SimulationProcess {
 			Simulation.start();
 			while (Preparation.prepared() < 10000) {
 				hold(1);
+			}
+			while(Preparation.hasNextPatient()) {
                 op.activate();
 			}
 			System.out.println("Time: "+(currentTime() - startTime));
