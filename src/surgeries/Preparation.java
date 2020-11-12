@@ -19,11 +19,14 @@ public class Preparation extends SimulationProcess {
 	
 	// Queue is implemented using the standard libraries of Java. Free facilities are collected to a stack.
 	private static final Queue<Patient> QUEUE = new ArrayDeque<Patient>();
-	private static final Queue<Patient> surgery_queue = new ArrayDeque<Patient>();
-	private static Stack<Preparation> free = new Stack<Preparation>();
+	// The index i of QUEUETIMES tells the amount of time the length of the queue has been i.
+	private static double[] queueTimes = new double[1000];
+	private static double lastTimeQueueChanged = currentTime();
+	private static final Stack<Preparation> FREE = new Stack<Preparation>();
 	// The number of preparated patients and (temporare) throughput time are kept in this class.
 	private static int prepared = 0;
 	private static double totalTime = 0;
+	private Operation theater;
 	
 	private ExponentialStream preparationTime;
 	
@@ -32,9 +35,10 @@ public class Preparation extends SimulationProcess {
 	 * constructor
 	 * @param mean the average time preparation takes
 	 */
-	public Preparation(double mean) {
+	public Preparation(double mean, Operation theater) {
 		preparationTime = new ExponentialStream(mean);
-		free.add(this);
+		FREE.add(this);
+		this.theater = theater;
 	}
 	
 	
@@ -43,20 +47,14 @@ public class Preparation extends SimulationProcess {
 	 * @param p patient entering
 	 */
 	public static void enqueue(Patient p) {
+		updateQueueStatistics();
 		QUEUE.add(p);
 		try {
-			if (!free.empty()) free.pop().activate();
+			if (!FREE.empty()) FREE.pop().activate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * @return returns the next ready patient for surgery.
-	 */
-	public static Patient getPatientForSurgery() {
-	       return surgery_queue.poll();
-	    }
 	
 	
 	/**
@@ -65,19 +63,21 @@ public class Preparation extends SimulationProcess {
 	public void run() {
 		while (!terminated()) {
 			while (!QUEUE.isEmpty()) {
+				updateQueueStatistics();
 				Patient p = QUEUE.poll();
 				try {
 					double t = preparationTime.getNumber();
 					hold(t);
 					prepared++;
 					p.setPreparationEndTime(currentTime());
+					p.setOperationStartTime(currentTime());
 					totalTime += p.getPreparationTime();
-					surgery_queue.add(p);
+					theater.enqueue(p);
 				} catch (ArithmeticException | SimulationException | RestartException | IOException e) {
 					e.printStackTrace();
 				}
 			}
-			free.push(this);
+			FREE.push(this);
 			try {
 				this.passivate();
 			} catch (RestartException e) {
@@ -101,13 +101,33 @@ public class Preparation extends SimulationProcess {
 	public static double averageTime() {
 		return totalTime/prepared;
 	}
-
-
-    /**
-     * @return returns boolean telling if there is a prepared patient.
-     */
-    public static boolean hasNextPatient() {
-        if (!surgery_queue.isEmpty()) return true;
-        return false;
-    }
+	
+	
+	/**
+	 * Updates the statistics about the amount of time the queue has had any length.
+	 * Must be called just before the queue changes.
+	 */
+	public static void updateQueueStatistics() {
+		double t = currentTime();
+		if (queueTimes.length <= QUEUE.size()) {
+			double[] newTimes = new double[queueTimes.length*2];
+			for (int i = 0; i < queueTimes.length; i++) newTimes[i] = queueTimes[i];
+			queueTimes = newTimes;
+		}
+		queueTimes[QUEUE.size()] += t - lastTimeQueueChanged;
+		lastTimeQueueChanged = t;
+	}
+	
+	/**
+	 * @return the average length of the queue
+	 */
+	public static double averageQueueLength() {
+		double totalTime = 0;
+		double sumTime = 0;
+		for (int i = 0; i < queueTimes.length; i++) {
+			totalTime += queueTimes[i];
+			sumTime += i*queueTimes[i];
+		}
+		return sumTime/totalTime;
+	}
 }

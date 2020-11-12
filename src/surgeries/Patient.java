@@ -17,7 +17,6 @@ public class Patient {
 	private double recoveryEndTime;
 	private boolean urgent;
 	
-	
 	/**
 	 * constructor
 	 * @param urgent is the patient urgent
@@ -42,11 +41,26 @@ public class Patient {
 		this.preparationEndTime = time;
 	}
 	
+	
+	/**
+	 * set time when operation started
+	 */
+	public void setOperationStartTime(double time) {
+		this.operationStartTime = time;
+	}
+	
 	/**
 	 * set time when operation ended
 	 */
-	public void setOperrationEndTime(double time) {
+	public void setOperationEndTime(double time) {
 		this.operationEndTime = time;
+	}
+
+	/**
+	 * set time when recovery started
+	 */
+	public void setRecoveryStartTime(double time) {
+		this.recoveryStartTime = time;
 	}
 	
 	/**
@@ -63,18 +77,25 @@ public class Patient {
 		return this.preparationEndTime - this.preparationStartTime;
 	}
 	
+	
 	/**
-	 * @return time in operation queue & operation
+	 * @return time preparation started
+	 */
+	public double getPreparationStartTime() {
+		return preparationStartTime;
+	}
+	
+	/**
+	 * @return time in operation queue, operation and waiting for recovery
 	 */
 	public double getOperationTime() {
 		return this.operationEndTime - this.operationStartTime;
 	}
 	
 	/**
-	 * @return time in recovery queue & recovery
+	 * @return time in recovery
 	 */
 	public double getRecoveryTime() {
 		return this.recoveryEndTime - this.recoveryStartTime;
 	}
-
 }
