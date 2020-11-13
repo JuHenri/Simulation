@@ -12,8 +12,8 @@ public class Hospital extends SimulationProcess {
 	
 	// the questionable parameters about the hospital capacity and its service times
 	private int patientInterval = 25;
-	private int numPrerparationUnits = 3;
-	private int prerationTime = 40;
+	private int numPreparationUnits = 3;
+	private int preparationTime = 40;
 	private int numOperationUnits = 1; // not in use (yet)
 	private int operationTime = 20;
 	private int numRecoveryUnits = 3;
@@ -30,8 +30,10 @@ public class Hospital extends SimulationProcess {
 			Arrivals generator = new Arrivals(patientInterval, 0.1);
 			generator.activate();
 			// Preparation and recovery facilities are stored to arrays.
-			Preparation[] preparations = new Preparation[numPrerparationUnits];
-			for (int i = 0; i < numPrerparationUnits; i++) preparations[i] = new Preparation(prerationTime, op);
+			Preparation[] preparations = new Preparation[numPreparationUnits];
+			for (int i = 0; i < numPreparationUnits; i++) preparations[i] = new Preparation(preparationTime, op);
+			Operation[] operations = new Operation[numOperationUnits];
+			for (int i = 0; i < numOperationUnits; i++) operations[i] = new Operation(operationTime);
 			Recovery[] recoveries = new Recovery[numRecoveryUnits];
 			for (int i = 0; i < numRecoveryUnits; i++) recoveries[i] = new Recovery(recoveryTime, op);
 			Simulation.start();
