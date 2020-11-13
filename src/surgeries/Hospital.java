@@ -38,14 +38,14 @@ public class Hospital extends SimulationProcess {
 			Recovery[] recoveries = new Recovery[numRecoveryUnits];
 			for (int i = 0; i < numRecoveryUnits; i++) recoveries[i] = new Recovery(recoveryTime, op);
 			Simulation.start();
-			while (Recovery.recovered() < 100) hold(10);
+			while (Recovery.recovered() < 1000) hold(10);
 			double totalTime = currentTime() - startTime;
 			System.out.println("Time: "+totalTime);
 			System.out.println("Average time in hospital: "+Recovery.averageThroughput());
 			System.out.println("Average time for urgent patients: "+Recovery.urgentThroughput());
 			System.out.println("Average time for non-urgent patients: "+Recovery.nonUrgentThroughput());
 			System.out.println("Total time spent in surgery for all patients: "+op.totalSurgeryTime());
-			double utilized = 100.0 - 100*op.utilizationTime()/totalTime;
+			double utilized = 100*op.utilizationTime()/totalTime;
 			System.out.println("The operating theater was in use "+utilized+" % of the simulation time.");
 			System.out.println("The average entry queue length was "+Preparation.averageQueueLength());
 			System.out.println("Patients operated: "+op.patientsOperated());
