@@ -1,8 +1,7 @@
 package surgeries;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.LinkedList;
 import java.util.Stack;
 
 import org.javasim.RestartException;
@@ -18,12 +17,12 @@ import org.javasim.streams.ExponentialStream;
 public class Preparation extends SimulationProcess {
 	
 	// Queue is implemented using the standard libraries of Java. Free facilities are collected to a stack.
-	private static final Queue<Patient> QUEUE = new ArrayDeque<Patient>();
+	private static final LinkedList<Patient> QUEUE = new LinkedList<Patient>();
 	// The index i of QUEUETIMES tells the amount of time the length of the queue has been i.
 	private static double[] queueTimes = new double[1000];
 	private static double lastTimeQueueChanged = currentTime();
 	private static final Stack<Preparation> FREE = new Stack<Preparation>();
-	// The number of preparated patients and (temporare) throughput time are kept in this class.
+	// The number of prepared patients and (temporary) throughput time are kept in this class.
 	private static int prepared = 0;
 	private static double totalTime = 0;
 	private Operation theater;
@@ -48,7 +47,13 @@ public class Preparation extends SimulationProcess {
 	 */
 	public static void enqueue(Patient p) {
 		updateQueueStatistics();
-		QUEUE.add(p);
+		if (p.urgent()) {
+			// add urgent patient after previous urgent patients but before non-urgent
+			QUEUE.add(getFirstNonUrgentIndex(), p);
+		} else {
+			// add patient to the end of the queue
+			QUEUE.add(p);
+		}
 		try {
 			if (!FREE.empty()) FREE.pop().activate();
 		} catch (Exception e) {
@@ -56,6 +61,19 @@ public class Preparation extends SimulationProcess {
 		}
 	}
 	
+	/**
+	 * @return index of first non-urgent patient in the queue
+	 */
+	public static int getFirstNonUrgentIndex() {
+		int nonUrgentIndex = 0;
+		for (int i = 0; i < QUEUE.size(); i++) {
+			if (!QUEUE.get(i).urgent()) {
+				nonUrgentIndex = i;
+				break;
+			}
+		}
+		return nonUrgentIndex;
+	}
 	
 	/**
 	 * the running process
@@ -88,7 +106,7 @@ public class Preparation extends SimulationProcess {
 	
 	
 	/**
-	 * @return number of preparated patients
+	 * @return number of prepared patients
 	 */
 	public static int prepared() {
 		return prepared;
@@ -96,7 +114,7 @@ public class Preparation extends SimulationProcess {
 	
 	
 	/**
-	 * @return total amount of time the preparated patients have been in the queue and the preparation
+	 * @return total amount of time the prepared patients have been in the queue and the preparation
 	 */
 	public static double averageTime() {
 		return totalTime/prepared;

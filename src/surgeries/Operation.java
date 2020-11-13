@@ -1,8 +1,7 @@
 package surgeries;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.LinkedList;
 
 import org.javasim.RestartException;
 import org.javasim.SimulationException;
@@ -15,7 +14,7 @@ import org.javasim.streams.ExponentialStream;
  */
 public class Operation extends SimulationProcess {
 	
-	private static final Queue<Patient> QUEUE = new ArrayDeque<Patient>();
+	private static final LinkedList<Patient> QUEUE = new LinkedList<Patient>();
     private ExponentialStream operationTime;
     private int surgeriesCompleted = 0;
     private double totalTime = 0;
@@ -25,7 +24,7 @@ public class Operation extends SimulationProcess {
     
     
     /**
-     * constrcuctor
+     * constructor
      * @param mean the average operation duration
      */
     public Operation(double mean) {
@@ -38,8 +37,14 @@ public class Operation extends SimulationProcess {
      * @param p prepared patient
      */
     public void enqueue(Patient p) {
-    	QUEUE.add(p);
-    	if (!blocked && underOperation == null)
+		if (p.urgent()) {
+			// add urgent patient after previous urgent patients but before non-urgent
+			QUEUE.add(getFirstNonUrgentIndex(), p);
+		} else {
+			// add patient to the end of the queue
+			QUEUE.add(p);
+		}
+		if (!blocked && underOperation == null)
 			try {
 				activate();
 			} catch (SimulationException | RestartException e) {
@@ -47,6 +52,19 @@ public class Operation extends SimulationProcess {
 			}
     }
     
+	/**
+	 * @return index of first non-urgent patient in the queue
+	 */
+	public static int getFirstNonUrgentIndex() {
+		int nonUrgentIndex = 0;
+		for (int i = 0; i < QUEUE.size(); i++) {
+			if (!QUEUE.get(i).urgent()) {
+				nonUrgentIndex = i;
+				break;
+			}
+		}
+		return nonUrgentIndex;
+	}
     
     /**
      * The running process. Interpretation: the "service time" includes waiting for free recovery facility.
