@@ -5,6 +5,8 @@ package surgeries;
  * The main class beginning the simulation.
  * @author Ilari Kauko
  * @author Henri Jussila
+ * @author Tuomas Kontio
+ * @version 13.11.2020
  */
 public class Main {
 	

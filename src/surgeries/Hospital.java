@@ -8,6 +8,8 @@ import org.javasim.SimulationProcess;
  * The process coordinating the whole simulation
  * @author Ilari Kauko
  * @author Henri Jussila
+ * @author Tuomas Kontio
+ * @version 13.11.2020
  */
 public class Hospital extends SimulationProcess {
 	
@@ -15,7 +17,7 @@ public class Hospital extends SimulationProcess {
 	private int patientInterval = 25;
 	private int numPreparationUnits = 3;
 	private int preparationTime = 40;
-	private int numOperationUnits = 1;
+	private int numOperationUnits = 1; // not in use (yet)
 	private int operationTime = 20;
 	private int numRecoveryUnits = 3;
 	private int recoveryTime = 40;
@@ -34,8 +36,6 @@ public class Hospital extends SimulationProcess {
 			// Preparation and recovery facilities are stored to arrays.
 			Preparation[] preparations = new Preparation[numPreparationUnits];
 			for (int i = 0; i < numPreparationUnits; i++) preparations[i] = new Preparation(preparationTime, op);
-			Operation[] operations = new Operation[numOperationUnits];
-			for (int i = 0; i < numOperationUnits; i++) operations[i] = new Operation(operationTime);
 			Recovery[] recoveries = new Recovery[numRecoveryUnits];
 			for (int i = 0; i < numRecoveryUnits; i++) recoveries[i] = new Recovery(recoveryTime, op);
 			Simulation.start();

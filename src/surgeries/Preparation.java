@@ -14,6 +14,8 @@ import org.javasim.streams.ExponentialStream;
  * the preparation process class
  * @author Ilari Kauko
  * @author Henri Jussila
+ * @author Tuomas Kontio
+ * @version 13.11.2020
  */
 public class Preparation extends SimulationProcess {
 	

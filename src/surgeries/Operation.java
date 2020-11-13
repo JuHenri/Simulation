@@ -11,6 +11,8 @@ import org.javasim.streams.ExponentialStream;
 
 /**
  * @author Ilari Kauko
+ * @author Tuomas Kontio
+ * @version 13.11.2020
  */
 public class Operation extends SimulationProcess {
 	

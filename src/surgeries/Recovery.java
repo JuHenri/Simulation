@@ -11,6 +11,8 @@ import org.javasim.streams.ExponentialStream;
 /**
  * @author Ilari Kauko
  * @author Henri Jussila
+ * @author Tuomas Kontio
+ * @version 13.11.2020
  */
 public class Recovery extends SimulationProcess {
 	

@@ -7,6 +7,8 @@ import org.javasim.Scheduler;
  * The patient class. The purpose is just that the patient knows it arrival time and urgency.
  * @author Ilari Kauko
  * @author Henri Jussila
+ * @author Tuomas Kontio
+ * @version 13.11.2020
  */
 public class Patient {
 	
