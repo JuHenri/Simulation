@@ -18,6 +18,7 @@ public class Hospital extends SimulationProcess {
 	private int operationTime = 20;
 	private int numRecoveryUnits = 3;
 	private int recoveryTime = 40;
+	private double urgentPercentage = 10;
 	
 	/**
 	 * run process
@@ -27,7 +28,7 @@ public class Hospital extends SimulationProcess {
 		try {
 			double startTime = currentTime();
 			Operation op = new Operation(operationTime);
-			Arrivals generator = new Arrivals(patientInterval, 0.1);
+			Arrivals generator = new Arrivals(patientInterval, urgentPercentage/100);
 			generator.activate();
 			// Preparation and recovery facilities are stored to arrays.
 			Preparation[] preparations = new Preparation[numPreparationUnits];
@@ -41,6 +42,8 @@ public class Hospital extends SimulationProcess {
 			double totalTime = currentTime() - startTime;
 			System.out.println("Time: "+totalTime);
 			System.out.println("Average time in hospital: "+Recovery.averageThroughput());
+			System.out.println("Average time for urgent patients: "+Recovery.urgentThroughput());
+			System.out.println("Average time for non-urgent patients: "+Recovery.nonUrgentThroughput());
 			System.out.println("Total time spent in surgery for all patients: "+op.totalSurgeryTime());
 			double utilized = 100.0 - 100*op.utilizationTime()/totalTime;
 			System.out.println("The operating theater was in use "+utilized+" % of the simulation time.");

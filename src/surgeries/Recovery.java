@@ -18,6 +18,8 @@ public class Recovery extends SimulationProcess {
 	private static int recovered = 0;
 	private static double totalThroughput = 0;
 	private static Patient next;
+	private static int numUrgent = 0;
+	private static double urgentThroughput = 0;
 	
 	private ExponentialStream recoveryTime;
 	private Operation theater;
@@ -60,7 +62,20 @@ public class Recovery extends SimulationProcess {
 		return totalThroughput/recovered;
 	}
 	
+	/**
+	 * @return the average time between the arrival to the system and the recovery end of a recovered urgent patient
+	 */
+	public static double urgentThroughput() {
+		return urgentThroughput/numUrgent;
+	}
 	
+	/**
+	 * @return the average time between the arrival to the system and the recovery end of a recovered non-urgent patient
+	 */
+	public static double nonUrgentThroughput() {
+		return (totalThroughput-urgentThroughput)/(recovered-numUrgent);
+	}
+
 	/**
 	 * @return number of recovered patients
 	 */
@@ -88,6 +103,10 @@ public class Recovery extends SimulationProcess {
 				recovered++;
 				double t = currentTime();
 				totalThroughput += t - p.getPreparationStartTime();
+				if (p.urgent()) {
+					numUrgent++;
+					urgentThroughput += t - p.getPreparationStartTime();
+				}
 				p.setRecoveryEndTime(t);
 			} while (theater.blocked()); // If the theater is blocked, this facility can be straightly reserved for it
 			FREE.push(this);
