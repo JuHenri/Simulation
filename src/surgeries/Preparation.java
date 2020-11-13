@@ -13,6 +13,7 @@ import org.javasim.streams.ExponentialStream;
 /**
  * the preparation process class
  * @author Ilari Kauko
+ * @author Henri Jussila
  */
 public class Preparation extends SimulationProcess {
 	
@@ -33,6 +34,7 @@ public class Preparation extends SimulationProcess {
 	/**
 	 * constructor
 	 * @param mean the average time preparation takes
+	 * @param theater the operation room being used.
 	 */
 	public Preparation(double mean, Operation theater) {
 		preparationTime = new ExponentialStream(mean);
@@ -78,7 +80,8 @@ public class Preparation extends SimulationProcess {
 	/**
 	 * the running process
 	 */
-	public void run() {
+	@Override
+    public void run() {
 		while (!terminated()) {
 			while (!QUEUE.isEmpty()) {
 				updateQueueStatistics();
@@ -140,12 +143,12 @@ public class Preparation extends SimulationProcess {
 	 * @return the average length of the queue
 	 */
 	public static double averageQueueLength() {
-		double totalTime = 0;
+		double totalTimeQueue = 0;
 		double sumTime = 0;
 		for (int i = 0; i < queueTimes.length; i++) {
-			totalTime += queueTimes[i];
+			totalTimeQueue += queueTimes[i];
 			sumTime += i*queueTimes[i];
 		}
-		return sumTime/totalTime;
+		return sumTime/totalTimeQueue;
 	}
 }

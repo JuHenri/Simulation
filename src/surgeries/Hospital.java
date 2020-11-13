@@ -7,6 +7,7 @@ import org.javasim.SimulationProcess;
 /**
  * The process coordinating the whole simulation
  * @author Ilari Kauko
+ * @author Henri Jussila
  */
 public class Hospital extends SimulationProcess {
 	
@@ -14,7 +15,7 @@ public class Hospital extends SimulationProcess {
 	private int patientInterval = 25;
 	private int numPreparationUnits = 3;
 	private int preparationTime = 40;
-	private int numOperationUnits = 1; // not in use (yet)
+	private int numOperationUnits = 1;
 	private int operationTime = 20;
 	private int numRecoveryUnits = 3;
 	private int recoveryTime = 40;

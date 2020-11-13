@@ -11,7 +11,8 @@ import org.javasim.streams.UniformStream;
 /**
  * The process generating new patients.
  * @author Ilari Kauko
- * @version 12.11.2020
+ * @author Henri Jussila
+ * @version 13.11.2020
  */
 public class Arrivals extends SimulationProcess {
 	
@@ -33,7 +34,8 @@ public class Arrivals extends SimulationProcess {
 	/**
 	 * the run process
 	 */
-	public void run() {
+	@Override
+    public void run() {
 		while (!terminated()) {
 			try {
 				Preparation.enqueue(new Patient(urgencyStream.getNumber() < pUrgent));

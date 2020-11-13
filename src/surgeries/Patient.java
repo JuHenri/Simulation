@@ -6,6 +6,7 @@ import org.javasim.Scheduler;
 /**
  * The patient class. The purpose is just that the patient knows it arrival time and urgency.
  * @author Ilari Kauko
+ * @author Henri Jussila
  */
 public class Patient {
 	
@@ -36,6 +37,7 @@ public class Patient {
 	
 	/**
 	 * set time when preparation ended
+	 * @param time double that has a timestamp
 	 */
 	public void setPreparationEndTime(double time) {
 		this.preparationEndTime = time;
@@ -44,6 +46,7 @@ public class Patient {
 	
 	/**
 	 * set time when operation started
+	 * @param time double that has a timestamp
 	 */
 	public void setOperationStartTime(double time) {
 		this.operationStartTime = time;
@@ -51,6 +54,7 @@ public class Patient {
 	
 	/**
 	 * set time when operation ended
+	 * @param time double that has a timestamp
 	 */
 	public void setOperationEndTime(double time) {
 		this.operationEndTime = time;
@@ -58,6 +62,7 @@ public class Patient {
 
 	/**
 	 * set time when recovery started
+	 * @param time double that has a timestamp
 	 */
 	public void setRecoveryStartTime(double time) {
 		this.recoveryStartTime = time;
@@ -65,6 +70,7 @@ public class Patient {
 	
 	/**
 	 * set time when recovery ended
+	 * @param time double that has a timestamp
 	 */
 	public void setRecoveryEndTime(double time) {
 		this.recoveryEndTime = time;

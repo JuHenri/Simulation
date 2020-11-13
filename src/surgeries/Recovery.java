@@ -10,6 +10,7 @@ import org.javasim.streams.ExponentialStream;
 
 /**
  * @author Ilari Kauko
+ * @author Henri Jussila
  */
 public class Recovery extends SimulationProcess {
 	
@@ -26,6 +27,8 @@ public class Recovery extends SimulationProcess {
 	
 	/**
 	 * constructor
+	 * @param mean used to init the exponentialStram
+	 * @param theater operation theather being used.
 	 */
 	public Recovery(double mean, Operation theater) {
 		recoveryTime = new ExponentialStream(mean);
@@ -35,6 +38,7 @@ public class Recovery extends SimulationProcess {
 	
 	/**
 	 * Tells if there is any facility available for new patients
+	 * @return true if there are facilities available.
 	 */
 	public static boolean free() {
 		return !FREE.empty();
@@ -43,7 +47,7 @@ public class Recovery extends SimulationProcess {
 	
 	/**
 	 * Starts the recovery of a given patient. The caller must first check if there is free facilities available.
-	 * @param p
+	 * @param p the patient object being pushed.
 	 */
 	public static void push(Patient p) {
 		try {
@@ -87,7 +91,8 @@ public class Recovery extends SimulationProcess {
 	/**
 	 * the run process
 	 */
-	public void run() {
+	@Override
+    public void run() {
 		while (!terminated()) {
 			do {
 				Patient p = next;
