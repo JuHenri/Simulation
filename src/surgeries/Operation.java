@@ -48,26 +48,27 @@ public class Operation extends SimulationProcess {
 			// add patient to the end of the queue
 			QUEUE.add(p);
 		}
-		if (!blocked && underOperation == null)
+		if (!blocked && underOperation == null) {
 			try {
 				activate();
 			} catch (SimulationException | RestartException e) {
 				e.printStackTrace();
 			}
+		}
     }
     
 	/**
 	 * @return index of first non-urgent patient in the queue
+	 * returns zero if there are no patients in the queue
+	 * returns size of the queue if all patients in the queue are urgent
 	 */
 	public static int getFirstNonUrgentIndex() {
-		int nonUrgentIndex = 0;
 		for (int i = 0; i < QUEUE.size(); i++) {
 			if (!QUEUE.get(i).urgent()) {
-				nonUrgentIndex = i;
-				break;
+				return i;
 			}
 		}
-		return nonUrgentIndex;
+		return QUEUE.size();
 	}
     
     /**

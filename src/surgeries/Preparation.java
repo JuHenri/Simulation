@@ -67,16 +67,16 @@ public class Preparation extends SimulationProcess {
 	
 	/**
 	 * @return index of first non-urgent patient in the queue
+	 * returns zero if there are no patients in the queue
+	 * returns size of the queue if all patients in the queue are urgent
 	 */
 	public static int getFirstNonUrgentIndex() {
-		int nonUrgentIndex = 0;
 		for (int i = 0; i < QUEUE.size(); i++) {
 			if (!QUEUE.get(i).urgent()) {
-				nonUrgentIndex = i;
-				break;
+				return i;
 			}
 		}
-		return nonUrgentIndex;
+		return QUEUE.size();
 	}
 	
 	/**
