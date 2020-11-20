@@ -47,7 +47,9 @@ public class Hospital extends SimulationProcess {
 			System.out.println("Average time for non-urgent patients: "+Recovery.nonUrgentThroughput());
 			System.out.println("Total time spent in surgery for all patients: "+op.totalSurgeryTime());
 			double utilized = 100*op.utilizationTime()/totalTime;
+			double blocked = 100*op.blockedTime()/totalTime;
 			System.out.println("The operating theater was in use "+utilized+" % of the simulation time.");
+			System.out.println("The operating theater was blocked "+blocked+" % of the simulation time.");
 			System.out.println("The average entry queue length was "+Preparation.averageQueueLength());
 			System.out.println("Patients operated: "+op.patientsOperated());
             Simulation.stop();

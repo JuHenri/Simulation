@@ -23,6 +23,8 @@ public class Operation extends SimulationProcess {
     private Patient underOperation;
     private boolean blocked;
     private double utilizationTime = 0;
+    private double blockedTime = 0;
+    private double blockedStart = 0;
     
     
     /**
@@ -77,7 +79,10 @@ public class Operation extends SimulationProcess {
         	double utilizationBegin = currentTime();
         	// If blocked is true, operation was activated because a recovery facility was freed. 
         	// Otherwise, there is a new patient alone in the queue.
-        	if (blocked) underOperation.setOperationEndTime(currentTime());
+        	if (blocked) {
+        	    underOperation.setOperationEndTime(currentTime());
+        	    blockedTime = blockedTime + currentTime() - blockedStart;
+        	}
         	blocked = false;
             while (!blocked && !QUEUE.isEmpty()) {
                 underOperation = QUEUE.poll();
@@ -88,6 +93,7 @@ public class Operation extends SimulationProcess {
                     surgeriesCompleted++;
                     blocked = !Recovery.free();
                     if (!blocked) Recovery.push(underOperation);
+                    else blockedStart = currentTime();
                 } catch (ArithmeticException | SimulationException | RestartException | IOException e) {
                     e.printStackTrace();
                 }
@@ -136,5 +142,12 @@ public class Operation extends SimulationProcess {
      */
     public boolean blocked() {
     	return blocked;
+    }
+    
+    /**
+     * @return the time the operation theathre was blocked.
+     */
+    public double blockedTime() {
+        return blockedTime;
     }
 }
