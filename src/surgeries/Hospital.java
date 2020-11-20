@@ -44,6 +44,7 @@ public class Hospital extends SimulationProcess {
 				generator.activate();
 				hold(numTimeUnits);
 				double totalTime = currentTime() - startTime;
+				System.out.println("Run: "+(i+1));
 				System.out.println("Time: "+totalTime);
 				System.out.println("Average time in hospital: "+Recovery.averageThroughput());
 				System.out.println("Average time for urgent patients: "+Recovery.urgentThroughput());
