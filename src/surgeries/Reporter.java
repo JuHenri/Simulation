@@ -83,7 +83,7 @@ public class Reporter extends SimulationProcess
 					+ patientsOperated[i]);
 		}
         System.out.println("The mean time patient spent in the hospital was: " + arrayMean(averageThroughput));
-        System.out.println("The interval estimate for patient time in hospital was: " + Arrays.toString(arrayConfidence(averageThroughput,1.96)));
+        System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(arrayConfidence(averageThroughput,1.96)));
 	}
 	
     /**
