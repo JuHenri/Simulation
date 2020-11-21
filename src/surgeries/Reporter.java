@@ -115,8 +115,8 @@ public class Reporter extends SimulationProcess
     }
     
     /**
-    * @return returns the standard deviation as a double.
-    * @param array the array from which the standard deviation is calculated.
+    * @return returns the interval estimates upper and lower bound in a double array.
+    * @param array the array from which the interval estimate is calculated.
     * @param confLevel https://i.stack.imgur.com/PiSUh.png find z value for the percentage you are looking for.
     */
    private double[] arrayConfidence(double[] array,double confLevel) {
