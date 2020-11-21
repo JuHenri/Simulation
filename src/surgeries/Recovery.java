@@ -33,7 +33,7 @@ public class Recovery extends SimulationProcess {
 	 * @param theater operation theather being used.
 	 */
 	public Recovery(double mean, Operation theater) {
-		recoveryTime = new ExponentialStream(mean);
+		recoveryTime = new ExponentialStream(mean, 0, 123, 12345);
 		this.theater = theater;
 		FREE.add(this);
 	}

@@ -39,7 +39,7 @@ public class Preparation extends SimulationProcess {
 	 * @param theater the operation room being used.
 	 */
 	public Preparation(double mean, Operation theater) {
-		preparationTime = new ExponentialStream(mean);
+		preparationTime = new ExponentialStream(mean, 0, 123, 12345);
 		FREE.add(this);
 		this.theater = theater;
 	}

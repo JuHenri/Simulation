@@ -32,7 +32,7 @@ public class Operation extends SimulationProcess {
      * @param mean the average operation duration
      */
     public Operation(double mean) {
-    	this.operationTime = new ExponentialStream(mean);
+        this.operationTime = new ExponentialStream(mean, 0, 123, 12345);
     }
     
     
