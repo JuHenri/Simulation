@@ -1,5 +1,7 @@
 package surgeries;
 
+import java.util.Arrays;
+
 import org.javasim.*;
 
 /**
@@ -50,8 +52,8 @@ public class Reporter extends SimulationProcess
 		{
 			try {
 				hold(interval);
-			} catch (SimulationException e){
-			} catch (RestartException e){
+			} catch (SimulationException | RestartException e ){
+			    //
 			}
 			averageThroughput[samplecount] = Recovery.averageThroughput();
 			urgentThroughput[samplecount] = Recovery.urgentThroughput();
@@ -80,6 +82,49 @@ public class Reporter extends SimulationProcess
 					+ averageQueueLength[i] + " "
 					+ patientsOperated[i]);
 		}
+        System.out.println("The mean time patient spent in the hospital was: " + arrayMean(averageThroughput));
+        System.out.println("The interval estimate for patient time in hospital was: " + Arrays.toString(arrayConfidence(averageThroughput,1.96)));
 	}
+	
+    /**
+     * @return returns the mean of the array as a double.
+     * @param array the array from which the mean is calculated.
+     */
+	private double arrayMean(double[] array) {
+	    double total = 0;
+	    for(double value : array){
+	        total += value;
+	    }
+        return total/array.length;
+	    
+	}
+	
+	 /**
+     * @return returns the standard deviation as a double.
+     * @param array the array from which the standard deviation is calculated.
+     */
+    private double arrayDeviation(double[] array) {
+        Double mean = arrayMean(array);
+        double difference = 0;
+        for (double value : array) {
+            difference += (value - mean) * (value - mean);
+        }
+        double variance = difference / array.length;
+        return Math.sqrt(variance);
+        
+    }
+    
+    /**
+    * @return returns the standard deviation as a double.
+    * @param array the array from which the standard deviation is calculated.
+    * @param confLevel https://i.stack.imgur.com/PiSUh.png find z value for the percentage you are looking for.
+    */
+   private double[] arrayConfidence(double[] array,double confLevel) {
+       double mean = arrayMean(array);
+       double deviation = arrayDeviation(array);
+       double confInterval = confLevel * deviation / Math.sqrt(array.length);
+       return new double[]{mean - confInterval, mean + confInterval};
+       
+   }
 
 }
