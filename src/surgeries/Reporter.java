@@ -65,11 +65,9 @@ public class Reporter extends SimulationProcess
 			nonUrgentThroughput[sampleCount] = Recovery.nonUrgentThroughput();
 			totalSurgeryTime[sampleCount] = theater.totalSurgeryTime();
 
-			utilized[sampleCount] = 100*(theater.utilizationTime()-oldUtilized)/interval;
-			oldUtilized =+ theater.utilizationTime();
+			utilized[sampleCount] = 100*(theater.utilizationTime()/ interval);
 
-			blocked[sampleCount] = 100*(theater.blockedTime()-oldBlocked)/interval;
-			oldBlocked =+ theater.blockedTime();
+			blocked[sampleCount] = 100*(theater.blockedTime()/ interval);
 
 			averageQueueLength[sampleCount] = Preparation.averageQueueLength();
 			patientsOperated[sampleCount] = theater.patientsOperated();

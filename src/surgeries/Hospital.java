@@ -41,9 +41,9 @@ public class Hospital extends SimulationProcess {
 			Reporter monitor = new Reporter(numSamples, samplingInterval, op);
 			Simulation.start();
 			generator.activate();
-			monitor.activate();
+			monitor.activate();            
 			for (int i = 0; i < numSamples; i++) {
-				double startTime = currentTime();
+			    double startTime = currentTime();
 				hold(samplingInterval + 1);
 				double totalTime = currentTime() - startTime;
 				System.out.println("Time: "+totalTime);
@@ -59,14 +59,14 @@ public class Hospital extends SimulationProcess {
 				System.out.println("Patients operated: "+op.patientsOperated());
 				System.out.println("----------");
 				for (Preparation p : preparations) {
-					p.cancel();
 					p.reset();
 				}
 				for (Recovery r : recoveries) {
-					r.cancel();
 					r.reset();
 				}
 				op.cancel();
+				op.reset();
+				op.activate();
 			}
             Simulation.stop();
 			monitor.report(numSamples);
