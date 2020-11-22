@@ -88,6 +88,13 @@ public class Recovery extends SimulationProcess {
 	public static int recovered() {
 		return recovered;
 	}
+
+	/**
+	 * @return total throughput
+	 */
+	public static double totalThroughput() {
+		return totalThroughput;
+	}
 	
 	
 	/**

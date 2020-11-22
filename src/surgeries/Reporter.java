@@ -13,17 +13,19 @@ public class Reporter extends SimulationProcess
 	private int interval;
 	private int sampleCount = 0;
 	private double[] averageThroughput;
-	private double[] urgentThroughput;
-	private double[] nonUrgentThroughput;
-	private double[] totalSurgeryTime;
 	private double[] utilized;
 	private double[] blocked;
 	private double[] averageQueueLength;
 	private int[] patientsOperated;
 	private Operation theater;
 
+	private double oldTotalThroughput = 0;
+	private int oldRecovered = 0;
+
 	private double oldUtilized = 0;
 	private double oldBlocked = 0;
+
+	private int oldPatientsOperated = 0;
 
 
 	/**
@@ -35,9 +37,6 @@ public class Reporter extends SimulationProcess
 	public Reporter(int numSamples, int samplingInterval, Operation theater) {
 		interval = samplingInterval;
 		averageThroughput = new double[numSamples];
-		urgentThroughput = new double[numSamples];
-		nonUrgentThroughput = new double[numSamples];
-		totalSurgeryTime = new double[numSamples];
 		utilized = new double[numSamples];
 		blocked = new double[numSamples];
 		averageQueueLength = new double[numSamples];
@@ -58,11 +57,9 @@ public class Reporter extends SimulationProcess
 			} catch (SimulationException | RestartException e ){
 			    //
 			}
-
-			averageThroughput[sampleCount] = Recovery.averageThroughput();
-			urgentThroughput[sampleCount] = Recovery.urgentThroughput();
-			nonUrgentThroughput[sampleCount] = Recovery.nonUrgentThroughput();
-			totalSurgeryTime[sampleCount] = theater.totalSurgeryTime();
+			averageThroughput[sampleCount] = (Recovery.totalThroughput()-oldTotalThroughput)/(Recovery.recovered()-oldRecovered);
+			oldTotalThroughput =+ Recovery.totalThroughput();
+			oldRecovered =+ Recovery.recovered();
 
 			utilized[sampleCount] = 100*(theater.utilizationTime()-oldUtilized)/interval;
 			oldUtilized =+ theater.utilizationTime();
@@ -71,7 +68,9 @@ public class Reporter extends SimulationProcess
 			oldBlocked =+ theater.blockedTime();
 
 			averageQueueLength[sampleCount] = Preparation.averageQueueLength();
-			patientsOperated[sampleCount] = theater.patientsOperated();
+
+			patientsOperated[sampleCount] = theater.patientsOperated()-oldPatientsOperated;
+			oldPatientsOperated =+ theater.patientsOperated();
 
 			sampleCount++;
 		}
@@ -87,12 +86,9 @@ public class Reporter extends SimulationProcess
 			System.out.println(
 					(i+1)*interval + " "
 					+ averageThroughput[i] + " "
-					+ urgentThroughput[i] + " "
-					+ nonUrgentThroughput[i] + " "
-					+ totalSurgeryTime[i] + " "
 					+ utilized[i] + " "
 					+ blocked[i] + " "
-					+ averageQueueLength[i] + " "
+					//+ averageQueueLength[i] + " "
 					+ patientsOperated[i]
 					);
 		}
