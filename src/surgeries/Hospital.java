@@ -31,7 +31,6 @@ public class Hospital extends SimulationProcess {
 	@Override
 	public void run() {
 		try {
-			double startTime = currentTime();
 			Operation op = new Operation(operationTime);
 			Arrivals generator = new Arrivals(patientInterval, urgentPercentage/100);
 			// Preparation and recovery facilities are stored to arrays.
@@ -43,25 +42,36 @@ public class Hospital extends SimulationProcess {
 			Simulation.start();
 			generator.activate();
 			monitor.activate();
-			hold(numSamples * samplingInterval + 1);
-			double totalTime = currentTime() - startTime;
-			System.out.println("Time: "+totalTime);
-			System.out.println("Average time in hospital: "+Recovery.averageThroughput());
-			System.out.println("Average time for urgent patients: "+Recovery.urgentThroughput());
-			System.out.println("Average time for non-urgent patients: "+Recovery.nonUrgentThroughput());
-			System.out.println("Total time spent in surgery for all patients: "+op.totalSurgeryTime());
-			double utilized = 100*op.utilizationTime()/totalTime;
-			double blocked = 100*op.blockedTime()/totalTime;
-			System.out.println("The operating theater was in use "+utilized+" % of the simulation time.");
-			System.out.println("The operating theater was blocked "+blocked+" % of the simulation time.");
-			System.out.println("The average entry queue length was "+Preparation.averageQueueLength());
-			System.out.println("Patients operated: "+op.patientsOperated());
-			System.out.println("----------");
-			monitor.report(numSamples);
+			for (int i = 0; i < numSamples; i++) {
+				double startTime = currentTime();
+				hold(samplingInterval + 1);
+				double totalTime = currentTime() - startTime;
+				System.out.println("Time: "+totalTime);
+				System.out.println("Average time in hospital: "+Recovery.averageThroughput());
+				System.out.println("Average time for urgent patients: "+Recovery.urgentThroughput());
+				System.out.println("Average time for non-urgent patients: "+Recovery.nonUrgentThroughput());
+				System.out.println("Total time spent in surgery for all patients: "+op.totalSurgeryTime());
+				double utilized = 100*op.utilizationTime()/totalTime;
+				double blocked = 100*op.blockedTime()/totalTime;
+				System.out.println("The operating theater was in use "+utilized+" % of the simulation time.");
+				System.out.println("The operating theater was blocked "+blocked+" % of the simulation time.");
+				System.out.println("The average entry queue length was "+Preparation.averageQueueLength());
+				System.out.println("Patients operated: "+op.patientsOperated());
+				System.out.println("----------");
+				for (Preparation p : preparations) {
+					p.cancel();
+					p.reset();
+				}
+				for (Recovery r : recoveries) {
+					r.cancel();
+					r.reset();
+				}
+				op.cancel();
+			}
             Simulation.stop();
+			monitor.report(numSamples);
 			generator.terminate();
 			monitor.terminate();
-			op.terminate();
 			for (Preparation p : preparations) p.terminate();
 			for (Recovery r : recoveries) r.terminate();
             SimulationProcess.mainResume();

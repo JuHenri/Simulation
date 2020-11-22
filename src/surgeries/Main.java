@@ -1,5 +1,6 @@
 package surgeries;
 
+import org.javasim.Simulation;
 
 /**
  * The main class beginning the simulation.
@@ -16,9 +17,11 @@ public class Main {
 	 * @param args not in use
 	 */
     public static void main (String[] args) {
-        Hospital m = new Hospital();
-        m.await();
-        System.exit(0);
+    	for (int i = 0; i < 1; i++) {
+            Hospital m = new Hospital();
+            m.await();
+    	}
+    	System.exit(0);
     }
 
 }

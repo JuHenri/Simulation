@@ -153,4 +153,17 @@ public class Preparation extends SimulationProcess {
 		}
 		return sumTime/totalTimeQueue;
 	}
+	
+	
+	/**
+	 * Resets the static attributes to their initial value/state to enable a new simulation
+	 */
+	public void reset() {
+		QUEUE.clear();
+		if (!FREE.contains(this)) FREE.add(this);
+		queueTimes = new double[1000];
+		lastTimeQueueChanged = currentTime();
+		prepared = 0;
+		totalTime = 0;
+	}
 }

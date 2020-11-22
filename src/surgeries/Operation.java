@@ -151,4 +151,16 @@ public class Operation extends SimulationProcess {
     public double blockedTime() {
         return blockedTime;
     }
+    
+    
+    public void reset() {
+    	QUEUE.clear();
+        surgeriesCompleted = 0;
+        totalTime = 0;
+        underOperation = null;
+        blocked = false;
+        utilizationTime = 0;
+        blockedTime = 0;
+        blockedStart = 0;
+    }
 }
