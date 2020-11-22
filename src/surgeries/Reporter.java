@@ -63,7 +63,7 @@ public class Reporter extends SimulationProcess
 			averageThroughput[sampleCount] = Recovery.averageThroughput();
 			urgentThroughput[sampleCount] = Recovery.urgentThroughput();
 			nonUrgentThroughput[sampleCount] = Recovery.nonUrgentThroughput();
-			totalSurgeryTime[sampleCount] = theater.totalSurgeryTime();
+			totalSurgeryTime[sampleCount] = theater.utilizationTime();
 
 			utilized[sampleCount] = 100*(theater.utilizationTime()/ interval);
 

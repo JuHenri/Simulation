@@ -25,6 +25,9 @@ public class Hospital extends SimulationProcess {
 	private int numSamples = 20;
 	private int samplingInterval = 1000;
 	
+	private Preparation[] preparations;
+	private Recovery[] recoveries;
+	
 	/**
 	 * run process
 	 */
@@ -33,12 +36,8 @@ public class Hospital extends SimulationProcess {
 		try {
 			Operation op = new Operation(operationTime);
 			Arrivals generator = new Arrivals(patientInterval, urgentPercentage/100);
-			// Preparation and recovery facilities are stored to arrays.
-			Preparation[] preparations = new Preparation[numPreparationUnits];
-			for (int i = 0; i < numPreparationUnits; i++) preparations[i] = new Preparation(preparationTime, op);
-			Recovery[] recoveries = new Recovery[numRecoveryUnits];
-			for (int i = 0; i < numRecoveryUnits; i++) recoveries[i] = new Recovery(recoveryTime, op);
 			Reporter monitor = new Reporter(numSamples, samplingInterval, op);
+			setupFacilities(op);
 			Simulation.start();
 			generator.activate();
 			monitor.activate();            
@@ -46,7 +45,7 @@ public class Hospital extends SimulationProcess {
 			    double startTime = currentTime();
 				hold(samplingInterval + 1);
 				double totalTime = currentTime() - startTime;
-				System.out.println("Time: "+totalTime);
+				System.out.println("Run: "+(i+1));
 				System.out.println("Average time in hospital: "+Recovery.averageThroughput());
 				System.out.println("Average time for urgent patients: "+Recovery.urgentThroughput());
 				System.out.println("Average time for non-urgent patients: "+Recovery.nonUrgentThroughput());
@@ -58,16 +57,9 @@ public class Hospital extends SimulationProcess {
 				System.out.println("The average entry queue length was "+Preparation.averageQueueLength());
 				System.out.println("Patients operated: "+op.patientsOperated());
 				System.out.println("----------");
-				for (Preparation p : preparations) {
-				    p.cancel();
-					p.reset();
-					p.activate();
-				}
-				for (Recovery r : recoveries) {
-				    r.cancel();
-					r.reset();
-					r.activate();
-				}
+	            Preparation.reset();
+	            Recovery.reset();
+	            setupFacilities(op);
 				op.cancel();
 				op.reset();
 				op.activate();
@@ -84,6 +76,13 @@ public class Hospital extends SimulationProcess {
 		}
 	}
 	
+	private void setupFacilities(Operation op) {
+        // Preparation and recovery facilities are stored to arrays.
+        preparations = new Preparation[numPreparationUnits];
+        for (int i = 0; i < numPreparationUnits; i++) preparations[i] = new Preparation(preparationTime, op);
+        recoveries = new Recovery[numRecoveryUnits];
+        for (int i = 0; i < numRecoveryUnits; i++) recoveries[i] = new Recovery(recoveryTime, op);
+	}
 	
 	/**
 	 * Starts the simulation process.
