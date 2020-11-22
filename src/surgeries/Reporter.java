@@ -11,16 +11,19 @@ import org.javasim.*;
 public class Reporter extends SimulationProcess
 {
 	private int interval;
-	private int samplecount = 0;
+	private int sampleCount = 0;
 	private double[] averageThroughput;
 	private double[] urgentThroughput;
 	private double[] nonUrgentThroughput;
 	private double[] totalSurgeryTime;
-	//private double[] utilized;
-	//private double[] blocked;
+	private double[] utilized;
+	private double[] blocked;
 	private double[] averageQueueLength;
 	private int[] patientsOperated;
 	private Operation theater;
+
+	private double oldUtilized = 0;
+	private double oldBlocked = 0;
 
 
 	/**
@@ -35,8 +38,8 @@ public class Reporter extends SimulationProcess
 		urgentThroughput = new double[numSamples];
 		nonUrgentThroughput = new double[numSamples];
 		totalSurgeryTime = new double[numSamples];
-		//utilized = new double[numSamples];
-		//blocked = new double[numSamples];
+		utilized = new double[numSamples];
+		blocked = new double[numSamples];
 		averageQueueLength = new double[numSamples];
 		patientsOperated = new int[numSamples];
 		this.theater = theater;
@@ -55,15 +58,22 @@ public class Reporter extends SimulationProcess
 			} catch (SimulationException | RestartException e ){
 			    //
 			}
-			averageThroughput[samplecount] = Recovery.averageThroughput();
-			urgentThroughput[samplecount] = Recovery.urgentThroughput();
-			nonUrgentThroughput[samplecount] = Recovery.nonUrgentThroughput();
-			totalSurgeryTime[samplecount] = theater.totalSurgeryTime();
-			//utilized[samplecount] = 100*theater.utilizationTime()/totalTime;
-			//blocked[samplecount] = 100*theater.blockedTime()/totalTime;
-			averageQueueLength[samplecount] = Preparation.averageQueueLength();
-			patientsOperated[samplecount] = theater.patientsOperated();
-			samplecount++;
+
+			averageThroughput[sampleCount] = Recovery.averageThroughput();
+			urgentThroughput[sampleCount] = Recovery.urgentThroughput();
+			nonUrgentThroughput[sampleCount] = Recovery.nonUrgentThroughput();
+			totalSurgeryTime[sampleCount] = theater.totalSurgeryTime();
+
+			utilized[sampleCount] = 100*(theater.utilizationTime()-oldUtilized)/interval;
+			oldUtilized =+ theater.utilizationTime();
+
+			blocked[sampleCount] = 100*(theater.blockedTime()-oldBlocked)/interval;
+			oldBlocked =+ theater.blockedTime();
+
+			averageQueueLength[sampleCount] = Preparation.averageQueueLength();
+			patientsOperated[sampleCount] = theater.patientsOperated();
+
+			sampleCount++;
 		}
 	}
 
@@ -74,16 +84,22 @@ public class Reporter extends SimulationProcess
      */
 	public void report(int numSamples) {
 		for (int i = 0; i < numSamples; i++) {
-			System.out.println((i+1)*interval + " "
+			System.out.println(
+					(i+1)*interval + " "
 					+ averageThroughput[i] + " "
 					+ urgentThroughput[i] + " "
 					+ nonUrgentThroughput[i] + " "
 					+ totalSurgeryTime[i] + " "
+					+ utilized[i] + " "
+					+ blocked[i] + " "
 					+ averageQueueLength[i] + " "
-					+ patientsOperated[i]);
+					+ patientsOperated[i]
+					);
 		}
         System.out.println("The mean time patient spent in the hospital was: " + arrayMean(averageThroughput));
         System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(arrayConfidence(averageThroughput,1.96)));
+        System.out.println("The mean utilization percentage was: " + arrayMean(utilized));
+        System.out.println("The mean blocked percentage was: " + arrayMean(blocked));
 	}
 	
     /**
