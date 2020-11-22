@@ -42,6 +42,7 @@ public class Hospital extends SimulationProcess {
 			Simulation.start();
 			Arrivals generator = new Arrivals(patientInterval, urgentPercentage/100);
 			generator.activate();
+<<<<<<< HEAD
 			for (int j = 0; j < preparationCapacities.length; j++) {
 				numPreparationUnits = preparationCapacities[j];
 				numRecoveryUnits = recoveryCapacities[j];
@@ -71,9 +72,43 @@ public class Hospital extends SimulationProcess {
 					for (Preparation p : preparations) p.reset();
 					for (Recovery r : recoveries) r.reset();
 					op.reset();
+=======
+			monitor.activate();            
+			for (int i = 0; i < numSamples; i++) {
+			    double startTime = currentTime();
+				hold(samplingInterval + 1);
+				double totalTime = currentTime() - startTime;
+				System.out.println("Time: "+totalTime);
+				System.out.println("Average time in hospital: "+Recovery.averageThroughput());
+				System.out.println("Average time for urgent patients: "+Recovery.urgentThroughput());
+				System.out.println("Average time for non-urgent patients: "+Recovery.nonUrgentThroughput());
+				System.out.println("Total time spent in surgery for all patients: "+op.totalSurgeryTime());
+				double utilized = 100*op.utilizationTime()/totalTime;
+				double blocked = 100*op.blockedTime()/totalTime;
+				System.out.println("The operating theater was in use "+utilized+" % of the simulation time.");
+				System.out.println("The operating theater was blocked "+blocked+" % of the simulation time.");
+				System.out.println("The average entry queue length was "+Preparation.averageQueueLength());
+				System.out.println("Patients operated: "+op.patientsOperated());
+				System.out.println("----------");
+				for (Preparation p : preparations) {
+				    p.cancel();
+					p.reset();
+					p.activate();
+>>>>>>> branch 'Ilari' of https://github.com/JuHenri/Simulation
 				}
+<<<<<<< HEAD
 				monitor.report(numSamples);
 				System.out.println();
+=======
+				for (Recovery r : recoveries) {
+				    r.cancel();
+					r.reset();
+					r.activate();
+				}
+				op.cancel();
+				op.reset();
+				op.activate();
+>>>>>>> branch 'Ilari' of https://github.com/JuHenri/Simulation
 			}
 			generator.terminate();
             Simulation.stop();
