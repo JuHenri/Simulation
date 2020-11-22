@@ -20,6 +20,7 @@ public class Patient {
 	private double recoveryEndTime;
 	private boolean urgent;
     private double blockedStart = 0;
+    private double surgeryStartTime;
 	
 	/**
 	 * constructor
@@ -122,5 +123,16 @@ public class Patient {
      */
     public void setBlockedStart(double blockedStart) {
         this.blockedStart = blockedStart;
+    }
+
+
+    public void setSurgeryStartTime(double currentTime) {
+        this.surgeryStartTime = currentTime;
+        
+    }
+    
+    public double getSurgeryStartTime() {
+        return surgeryStartTime;
+        
     }
 }

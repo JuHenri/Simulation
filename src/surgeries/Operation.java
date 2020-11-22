@@ -86,7 +86,7 @@ public class Operation extends SimulationProcess {
                 underOperation = QUEUE.poll();
                 try {
                     double t = operationTime.getNumber();
-                    underOperation.setOperationStartTime(currentTime());
+                    underOperation.setSurgeryStartTime(currentTime());
                     hold(t);
                     totalTime += t;
                     if(!moveToRecovery()) {
@@ -119,7 +119,7 @@ public class Operation extends SimulationProcess {
         if (Recovery.free()) {
             underOperation.setOperationEndTime(currentTime());
             Recovery.push(underOperation);
-            utilizationTime += underOperation.getOperationTime();
+            utilizationTime += currentTime() - underOperation.getSurgeryStartTime();
             surgeriesCompleted++;
             if(underOperation.getBlockedStart() != 0)blockedTime += (currentTime() - underOperation.getBlockedStart());
             return true;
