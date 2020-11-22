@@ -9,7 +9,7 @@ import org.javasim.*;
  * @author Tuomas Kontio
  * @version 21.11.2020
  */
-public class Reporter extends SimulationProcess
+public class Reporter 
 {
 	private int interval;
 	private int sampleCount = 0;
@@ -47,35 +47,20 @@ public class Reporter extends SimulationProcess
 	}
 
 
-    /**
-     * The running process. Run in infinite loop and collect stats.
-     */
-    @Override
-	public void run() {
-		for (;;)
-		{
-			try {
-				hold(interval);
-			} catch (SimulationException | RestartException e ){
-			    //
-			}
-
+	public void update() {
 			averageThroughput[sampleCount] = Recovery.averageThroughput();
 			urgentThroughput[sampleCount] = Recovery.urgentThroughput();
 			nonUrgentThroughput[sampleCount] = Recovery.nonUrgentThroughput();
 			totalSurgeryTime[sampleCount] = theater.totalSurgeryTime();
 
-			utilized[sampleCount] = 100*(theater.utilizationTime()-oldUtilized)/interval;
-			oldUtilized =+ theater.utilizationTime();
+			utilized[sampleCount] = 100*(theater.utilizationTime()/ interval);
 
-			blocked[sampleCount] = 100*(theater.blockedTime()-oldBlocked)/interval;
-			oldBlocked =+ theater.blockedTime();
+			blocked[sampleCount] = 100*(theater.blockedTime()/ interval);
 
 			averageQueueLength[sampleCount] = Preparation.averageQueueLength();
 			patientsOperated[sampleCount] = theater.patientsOperated();
 
 			sampleCount++;
-		}
 	}
 
 

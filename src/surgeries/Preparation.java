@@ -154,15 +154,12 @@ public class Preparation extends SimulationProcess {
 		return sumTime/totalTimeQueue;
 	}
 	
-	
-	/**
-	 * Resets the static attributes to their initial value/state to enable a new simulation
-	 */
 	public void reset() {
+		if (!FREE.contains(this)) FREE.push(this);
 		QUEUE.clear();
-		if (!FREE.contains(this)) FREE.add(this);
 		queueTimes = new double[1000];
 		lastTimeQueueChanged = currentTime();
+		// The number of prepared patients and (temporary) throughput time are kept in this class.
 		prepared = 0;
 		totalTime = 0;
 	}

@@ -100,7 +100,7 @@ public class Operation extends SimulationProcess {
                 }
             }
             // If the loop ended because the operation queue drained and not because all recovery facilities were blocked, there is no patient in the theater.
-            if (!blocked) {
+            if (!blocked && underOperation != null) {
             	underOperation.setOperationEndTime(currentTime());
             	underOperation = null;
             }
@@ -151,7 +151,6 @@ public class Operation extends SimulationProcess {
     public double blockedTime() {
         return blockedTime;
     }
-    
     
     public void reset() {
     	QUEUE.clear();

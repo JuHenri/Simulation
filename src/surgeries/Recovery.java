@@ -48,7 +48,7 @@ public class Recovery extends SimulationProcess {
 	
 	
 	/**
-	 * Starts the recovery of a given patient. The caller must first check if there are free facilities available.
+	 * Starts the recovery of a given patient. The caller must first check if there is free facilities available.
 	 * @param p the patient object being pushed.
 	 */
 	public static void push(Patient p) {
@@ -95,9 +95,10 @@ public class Recovery extends SimulationProcess {
 	 */
 	@Override
     public void run() {
-		while (!terminated() && next != null) {
+		while (!terminated()) {
 			do {
 				Patient p = next;
+				if (p == null) break;
 				double startTime = currentTime();
 				p.setRecoveryStartTime(startTime);
 				try {
@@ -126,11 +127,8 @@ public class Recovery extends SimulationProcess {
 	}
 	
 	
-	/**
-	 * Resets the static attributes to their initial value/state to enable a new simulation
-	 */
 	public void reset() {
-		if (!FREE.contains(this)) FREE.add(this);
+		if (!FREE.contains(this)) FREE.push(this);
 		recovered = 0;
 		totalThroughput = 0;
 		next = null;
