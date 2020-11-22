@@ -141,7 +141,7 @@ public class Recovery extends SimulationProcess {
         FREE.clear();
         recovered = 0;
         totalThroughput = 0;
-        //next = null;
+        next = null;
         numUrgent = 0;
         urgentThroughput = 0;
     }
