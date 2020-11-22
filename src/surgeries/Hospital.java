@@ -59,10 +59,14 @@ public class Hospital extends SimulationProcess {
 				System.out.println("Patients operated: "+op.patientsOperated());
 				System.out.println("----------");
 				for (Preparation p : preparations) {
+				    p.cancel();
 					p.reset();
+					p.activate();
 				}
 				for (Recovery r : recoveries) {
+				    r.cancel();
 					r.reset();
+					r.activate();
 				}
 				op.cancel();
 				op.reset();
