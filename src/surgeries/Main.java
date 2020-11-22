@@ -21,7 +21,7 @@ public class Main {
 	
 	
 	/**
-	 * The initializer of a new hospital
+	 * The initializer of a new hospital.
 	 * @param args not in use
 	 * @throws InterruptedException 
 	 * @throws RestartException 
