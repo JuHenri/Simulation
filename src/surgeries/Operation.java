@@ -16,7 +16,7 @@ import org.javasim.streams.ExponentialStream;
  */
 public class Operation extends SimulationProcess {
 	
-	private static LinkedList<Patient> QUEUE = new LinkedList<Patient>();
+	private static final LinkedList<Patient> QUEUE = new LinkedList<Patient>();
     private ExponentialStream operationTime;
     private int surgeriesCompleted = 0;
     private double totalTime = 0;
@@ -82,7 +82,7 @@ public class Operation extends SimulationProcess {
         	// Otherwise, there is a new patient alone in the queue.
         	if (blocked) {
         	    underOperation.setOperationEndTime(currentTime());
-        	    blockedTime = blockedTime + currentTime() - blockedStart;
+        	    blockedTime += currentTime() - blockedStart;
         	}
         	blocked = false;
             while (!blocked && !QUEUE.isEmpty()) {
@@ -90,6 +90,8 @@ public class Operation extends SimulationProcess {
                 try {
                     double t = operationTime.getNumber();
                     hold(t);
+                    // If the sample got terminated when there was a surgery going on
+                    if (underOperation == null) break; 
                     totalTime += t;
                     surgeriesCompleted++;
                     blocked = !Recovery.free();
@@ -100,15 +102,12 @@ public class Operation extends SimulationProcess {
                 }
             }
             // If the loop ended because the operation queue drained and not because all recovery facilities were blocked, there is no patient in the theater.
-<<<<<<< HEAD
             if (!blocked && underOperation != null) {
-=======
-            if (!blocked & underOperation != null) {
->>>>>>> branch 'Ilari' of https://github.com/JuHenri/Simulation
             	underOperation.setOperationEndTime(currentTime());
             	underOperation = null;
             }
-            utilizationTime += currentTime() - utilizationBegin;
+            // If the while loop ended because the sample was terminated, utilization time must not be count.
+            if (totalTime != 0) utilizationTime += currentTime() - utilizationBegin;
             try {
                 this.passivate();
             } catch (RestartException e) {
@@ -160,7 +159,7 @@ public class Operation extends SimulationProcess {
     	QUEUE.clear();
         surgeriesCompleted = 0;
         totalTime = 0;
-        //underOperation = null;
+        underOperation = null;
         blocked = false;
         utilizationTime = 0;
         blockedTime = 0;

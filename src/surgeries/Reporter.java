@@ -56,7 +56,7 @@ public class Reporter
 			utilized[sampleCount] = 100*(theater.utilizationTime()/ interval);
 
 			blocked[sampleCount] = 100*(theater.blockedTime()/ interval);
-
+			
 			averageQueueLength[sampleCount] = Preparation.averageQueueLength();
 			patientsOperated[sampleCount] = theater.patientsOperated();
 
@@ -80,7 +80,7 @@ public class Reporter
 					+ blocked[i] + " "
 					+ averageQueueLength[i] + " "
 					+ patientsOperated[i]
-					);
+			);
 		}
         System.out.println("The mean time patient spent in the hospital was: " + arrayMean(averageThroughput));
         System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(arrayConfidence(averageThroughput,1.96)));
@@ -126,7 +126,6 @@ public class Reporter
        double deviation = arrayDeviation(array);
        double confInterval = confLevel * deviation / Math.sqrt(array.length);
        return new double[]{mean - confInterval, mean + confInterval};
-       
    }
 
 }

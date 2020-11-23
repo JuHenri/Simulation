@@ -72,6 +72,7 @@ public class Recovery extends SimulationProcess {
 	 * @return the average time between the arrival to the system and the recovery end of a recovered urgent patient
 	 */
 	public static double urgentThroughput() {
+		if (numUrgent == 0) return 0;
 		return urgentThroughput/numUrgent;
 	}
 	
@@ -127,12 +128,12 @@ public class Recovery extends SimulationProcess {
 	}
 	
 	
-	public void reset() {
-		if (!FREE.contains(this)) FREE.push(this);
+	public static void reset() {
 		recovered = 0;
 		totalThroughput = 0;
 		//next = null;
 		numUrgent = 0;
 		urgentThroughput = 0;
+		FREE.clear();
 	}
 }

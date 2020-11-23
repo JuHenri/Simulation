@@ -154,9 +154,9 @@ public class Preparation extends SimulationProcess {
 		return sumTime/totalTimeQueue;
 	}
 	
-	public void reset() {
-		if (!FREE.contains(this)) FREE.push(this);
+	public static  void reset() {
 		QUEUE.clear();
+		FREE.clear();
 		queueTimes = new double[1000];
 		lastTimeQueueChanged = currentTime();
 		// The number of prepared patients and (temporary) throughput time are kept in this class.
