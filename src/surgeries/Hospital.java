@@ -40,19 +40,19 @@ public class Hospital extends SimulationProcess {
 				int numPreparationUnits = preparationCapacities[j];
 				int numRecoveryUnits = recoveryCapacities[j];
 				System.out.println("Experiment "+(j+1)+": "+numPreparationUnits+" preparation units and "+numRecoveryUnits+" recovery units.");
-				Reporter monitor = new Reporter(numSamples, samplingInterval, op);
+				Reporter monitor = new Reporter(preparationCapacities.length, numSamples, samplingInterval, op);
 				for (int i = 0; i < numSamples; i++) {
 					Preparation[] preparations = new Preparation[numPreparationUnits];
 					for (int k = 0; k < numPreparationUnits; k++) preparations[k] = new Preparation(preparationTime, op);
 					Recovery[] recoveries = new Recovery[numRecoveryUnits];
 					for (int k = 0; k < numRecoveryUnits; k++) recoveries[k] = new Recovery(recoveryTime, op);
-					hold(samplingInterval + 1);
-					monitor.update();
+					hold(samplingInterval);
+					monitor.update(j, i);
 					Preparation.reset();
 					Recovery.reset();
 					op.reset();
 				}
-				monitor.report(numSamples);
+				monitor.report(j, numSamples);
 				System.out.println();
 			}
 			generator.terminate();
