@@ -82,20 +82,21 @@ public class Reporter extends SimulationProcess
      * @param numSamples number of samples
      */
 	public void report(int numSamples) {
-		for (int i = 0; i < numSamples; i++) {
-			System.out.println(
-					(i+1)*interval + " "
-					+ averageThroughput[i] + " "
-					+ urgentThroughput[i] + " "
-					+ nonUrgentThroughput[i] + " "
-					+ totalSurgeryTime[i] + " "
-					+ utilized[i] + " "
-					+ blocked[i] + " "
-					+ averageQueueLength[i] + " "
-					+ patientsOperated[i]
-					);
-		}
-		System.out.println("The mean queue length was: " + arrayMean(averageQueueLength));
+		//for (int i = 0; i < numSamples; i++) {
+			//System.out.println(
+					//(i+1)*interval + " "
+					//+ averageThroughput[i] + " "
+					//+ urgentThroughput[i] + " "
+					//+ nonUrgentThroughput[i] + " "
+					//+ totalSurgeryTime[i] + " "
+					//+ utilized[i] + " "
+					//+ blocked[i] + " "
+					//+ averageQueueLength[i] + " "
+					//+ patientsOperated[i]
+					//);
+		//}
+		System.out.println("The mean utilization was: " + arrayMean(totalSurgeryTime)/10 + " %");
+		System.out.println("The mean queue length was: " + arrayMean(averageQueueLength) + " patients");
         System.out.println("The interval estimate lower and upper bounds at 95% confidence for queue length were: " + Arrays.toString(arrayConfidence(averageQueueLength,1.96)));
         System.out.println("The mean blocked percentage was: " + arrayMean(blocked));
         System.out.println("The interval estimate lower and upper bounds at 95% confidence for blocking were: " + Arrays.toString(arrayConfidence(blocked,1.96)));
