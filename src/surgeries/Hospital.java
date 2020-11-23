@@ -12,7 +12,7 @@ import org.javasim.SimulationProcess;
  * @version 13.11.2020
  */
 public class Hospital extends SimulationProcess {
-
+	
 	// the questionable parameters about the hospital capacity and its service times
 	private int patientInterval = 25;
 	private int preparationTime = 40;
@@ -22,10 +22,7 @@ public class Hospital extends SimulationProcess {
 	private double urgentPercentage = 10;
 	private int numSamples = 20;
 	private int samplingInterval = 1000;
-
-	private Preparation[] preparations;
-	private Recovery[] recoveries;
-
+	
 	/**
 	 * run process
 	 */
@@ -67,15 +64,8 @@ public class Hospital extends SimulationProcess {
 			e.printStackTrace();
 		}
 	}
-
-	private void setupFacilities(Operation op) {
-        // Preparation and recovery facilities are stored to arrays.
-        preparations = new Preparation[numPreparationUnits];
-        for (int i = 0; i < numPreparationUnits; i++) preparations[i] = new Preparation(preparationTime, op);
-        recoveries = new Recovery[numRecoveryUnits];
-        for (int i = 0; i < numRecoveryUnits; i++) recoveries[i] = new Recovery(recoveryTime, op);
-	}
-
+	
+	
 	/**
 	 * Starts the simulation process.
 	 */

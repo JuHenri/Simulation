@@ -15,7 +15,7 @@ import org.javasim.streams.ExponentialStream;
  * @version 13.11.2020
  */
 public class Operation extends SimulationProcess {
-
+	
 	private static final LinkedList<Patient> QUEUE = new LinkedList<Patient>();
     private ExponentialStream operationTime;
     private int surgeriesCompleted = 0;
@@ -23,8 +23,9 @@ public class Operation extends SimulationProcess {
     private Patient underOperation;
     private boolean blocked;
     private double blockedTime = 0;
-
-
+    private double blockedStart = 0;
+    
+    
     /**
      * constructor
      * @param mean the average operation duration
@@ -32,8 +33,8 @@ public class Operation extends SimulationProcess {
     public Operation(double mean) {
         this.operationTime = new ExponentialStream(mean, 0, 123, 12345);
     }
-
-
+    
+    
     /**
      * Sets a prepared patient to the operation queue.
      * @param p prepared patient
@@ -54,7 +55,7 @@ public class Operation extends SimulationProcess {
 			}
 		}
     }
-
+    
 	/**
 	 * @return index of first non-urgent patient in the queue
 	 * returns zero if there are no patients in the queue
@@ -68,14 +69,14 @@ public class Operation extends SimulationProcess {
 		}
 		return QUEUE.size();
 	}
-
+    
     /**
      * The running process. Interpretation: the "service time" includes waiting for free recovery facility.
      */
     @Override
     public void run() {
         while (!terminated()) {
-        	// If blocked is true, operation was activated because a recovery facility was freed.
+        	// If blocked is true, operation was activated because a recovery facility was freed. 
         	// Otherwise, there is a new patient alone in the queue.
         	if (blocked) {
         	    underOperation.setOperationEndTime(currentTime());
@@ -86,10 +87,9 @@ public class Operation extends SimulationProcess {
                 underOperation = QUEUE.poll();
                 try {
                     double t = operationTime.getNumber();
-                    underOperation.setSurgeryStartTime(currentTime());
                     hold(t);
                     // If the sample got terminated when there was a surgery going on
-                    if (underOperation == null) break;
+                    if (underOperation == null) break; 
                     totalTime += t;
                     surgeriesCompleted++;
                     blocked = !Recovery.free();
@@ -112,39 +112,16 @@ public class Operation extends SimulationProcess {
             }
         }
     }
-
-    /**
-     * Tries to move the patient to recovery
-     * @returns true if successfull.
-     */
-    private boolean moveToRecovery() {
-        if (Recovery.free()) {
-            underOperation.setOperationEndTime(currentTime());
-            Recovery.push(underOperation);
-            utilizationTime += currentTime() - underOperation.getSurgeryStartTime();
-            surgeriesCompleted++;
-            if(underOperation.getBlockedStart() != 0)blockedTime += (currentTime() - underOperation.getBlockedStart());
-            return true;
-        }
-        return false;
-    }
-
-
+    
+    
     /**
      * @return total time of the surgeries
      */
     public double totalSurgeryTime() {
         return totalTime;
     }
-
-    /**
-     * Checks if surgery is being blocked, and updates the timings accordingly.
-     */
-    public void updateBlocking() {
-        if(underOperation != null)if(underOperation.getBlockedStart() != 0)blockedTime += (currentTime() - underOperation.getBlockedStart());
-    }
-
-
+    
+    
     /**
      * @return number of operated patients
      */
@@ -152,29 +129,29 @@ public class Operation extends SimulationProcess {
         return surgeriesCompleted;
     }
 
-
+    
     /**
      * @return the amount of time there has been an operation going on in the theater
      */
     public double utilizationTime() {
     	return totalTime;
     }
-
-
+    
+    
     /**
      * @return is the theater blocked because all the recovery facilities are reserved
      */
     public boolean blocked() {
     	return blocked;
     }
-
+    
     /**
      * @return the time the operation theathre was blocked.
      */
     public double blockedTime() {
         return blockedTime;
     }
-
+    
     public void reset() {
     	QUEUE.clear();
         surgeriesCompleted = 0;
@@ -182,5 +159,6 @@ public class Operation extends SimulationProcess {
         underOperation = null;
         blocked = false;
         blockedTime = 0;
+        blockedStart = 0;
     }
 }
