@@ -70,11 +70,11 @@ public class Recovery extends SimulationProcess {
 
     /**
      * @return the average time between the arrival to the system and the recovery end of a recovered urgent patient.
-     * If there were 0 urgent patients returns a -1;
+     * If there were 0 urgent patients returns 0;
      */
     public static double urgentThroughput() {
-        if (numUrgent != 0)return urgentThroughput/numUrgent;
-        return -1;
+        if (numUrgent != 0) return urgentThroughput/numUrgent;
+        return 0;
     }
 
     /**
