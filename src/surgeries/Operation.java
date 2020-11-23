@@ -22,7 +22,6 @@ public class Operation extends SimulationProcess {
     private double totalTime = 0;
     private Patient underOperation;
     private boolean blocked;
-    private double utilizationTime = 0;
     private double blockedTime = 0;
     private double blockedStart = 0;
     
@@ -77,7 +76,6 @@ public class Operation extends SimulationProcess {
     @Override
     public void run() {
         while (!terminated()) {
-        	double utilizationBegin = currentTime();
         	// If blocked is true, operation was activated because a recovery facility was freed. 
         	// Otherwise, there is a new patient alone in the queue.
         	if (blocked) {
@@ -95,8 +93,8 @@ public class Operation extends SimulationProcess {
                     totalTime += t;
                     surgeriesCompleted++;
                     blocked = !Recovery.free();
-                    if (!blocked) Recovery.push(underOperation);
-                    else blockedStart = currentTime();
+                    Recovery.push(underOperation);
+                    if (blocked) blockedStart = currentTime();
                 } catch (ArithmeticException | SimulationException | RestartException | IOException e) {
                     e.printStackTrace();
                 }
@@ -107,7 +105,6 @@ public class Operation extends SimulationProcess {
             	underOperation = null;
             }
             // If the while loop ended because the sample was terminated, utilization time must not be count.
-            if (totalTime != 0) utilizationTime += currentTime() - utilizationBegin;
             try {
                 this.passivate();
             } catch (RestartException e) {
@@ -161,7 +158,6 @@ public class Operation extends SimulationProcess {
         totalTime = 0;
         underOperation = null;
         blocked = false;
-        utilizationTime = 0;
         blockedTime = 0;
         blockedStart = 0;
     }

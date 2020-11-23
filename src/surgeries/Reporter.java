@@ -22,9 +22,6 @@ public class Reporter
 	private int[] patientsOperated;
 	private Operation theater;
 
-	private double oldUtilized = 0;
-	private double oldBlocked = 0;
-
 
 	/**
 	 * constructor
