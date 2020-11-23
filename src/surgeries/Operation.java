@@ -135,6 +135,13 @@ public class Operation extends SimulationProcess {
         return totalTime;
     }
     
+    /**
+     * Checks if surgery is being blocked, and updates the timings accordingly.
+     */
+    public void updateBlocking() {
+        if(underOperation != null)if(underOperation.getBlockedStart() != 0)blockedTime += (currentTime() - underOperation.getBlockedStart());
+    }
+    
     
     /**
      * @return number of operated patients

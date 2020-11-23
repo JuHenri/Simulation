@@ -63,7 +63,7 @@ public class Reporter extends SimulationProcess
 			averageThroughput[sampleCount] = Recovery.averageThroughput();
 			urgentThroughput[sampleCount] = Recovery.urgentThroughput();
 			nonUrgentThroughput[sampleCount] = Recovery.nonUrgentThroughput();
-			totalSurgeryTime[sampleCount] = theater.utilizationTime();
+			totalSurgeryTime[sampleCount] = theater.totalSurgeryTime();
 
 			utilized[sampleCount] = 100*(theater.utilizationTime()/ interval);
 
@@ -95,10 +95,11 @@ public class Reporter extends SimulationProcess
 					+ patientsOperated[i]
 					);
 		}
-        System.out.println("The mean time patient spent in the hospital was: " + arrayMean(averageThroughput));
-        System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(arrayConfidence(averageThroughput,1.96)));
-        System.out.println("The mean utilization percentage was: " + arrayMean(utilized));
+		System.out.println("The mean queue length was: " + arrayMean(averageQueueLength));
+        System.out.println("The interval estimate lower and upper bounds at 95% confidence for queue length were: " + Arrays.toString(arrayConfidence(averageQueueLength,1.96)));
         System.out.println("The mean blocked percentage was: " + arrayMean(blocked));
+        System.out.println("The interval estimate lower and upper bounds at 95% confidence for blocking were: " + Arrays.toString(arrayConfidence(blocked,1.96)));
+
 	}
 	
     /**

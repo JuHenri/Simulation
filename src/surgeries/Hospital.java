@@ -19,7 +19,7 @@ public class Hospital extends SimulationProcess {
 	private int preparationTime = 40;
 	private int numOperationUnits = 1; // not in use (yet)
 	private int operationTime = 20;
-	private int numRecoveryUnits = 3;
+	private int numRecoveryUnits = 4;
 	private int recoveryTime = 40;
 	private double urgentPercentage = 10;
 	private int numSamples = 20;
@@ -45,6 +45,7 @@ public class Hospital extends SimulationProcess {
 			    double startTime = currentTime();
 				hold(samplingInterval + 1);
 				double totalTime = currentTime() - startTime;
+				op.updateBlocking();
 				System.out.println("Run: "+(i+1));
 				System.out.println("Average time in hospital: "+Recovery.averageThroughput());
 				System.out.println("Average time for urgent patients: "+Recovery.urgentThroughput());
