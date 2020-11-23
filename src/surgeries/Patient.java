@@ -19,6 +19,8 @@ public class Patient {
 	private double recoveryStartTime;
 	private double recoveryEndTime;
 	private boolean urgent;
+    private double blockedStart = 0;
+    private double surgeryStartTime;
 	
 	/**
 	 * constructor
@@ -106,4 +108,31 @@ public class Patient {
 	public double getRecoveryTime() {
 		return this.recoveryEndTime - this.recoveryStartTime;
 	}
+
+
+    /**
+     * @return time when patient was ready but couldn't be moved from surgery.
+     */
+    public double getBlockedStart() {
+        return blockedStart;
+    }
+
+
+    /**
+     * @param blockedStart time when patient was ready but couldn't be moved from surgery.
+     */
+    public void setBlockedStart(double blockedStart) {
+        this.blockedStart = blockedStart;
+    }
+
+
+    public void setSurgeryStartTime(double currentTime) {
+        this.surgeryStartTime = currentTime;
+        
+    }
+    
+    public double getSurgeryStartTime() {
+        return surgeryStartTime;
+        
+    }
 }

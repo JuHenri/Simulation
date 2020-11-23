@@ -1,3 +1,4 @@
+
 package surgeries;
 
 import java.util.Arrays;
@@ -13,6 +14,9 @@ public class Reporter extends SimulationProcess
 	private int interval;
 	private int sampleCount = 0;
 	private double[] averageThroughput;
+	private double[] urgentThroughput;
+	private double[] nonUrgentThroughput;
+	private double[] totalSurgeryTime;
 	private double[] utilized;
 	private double[] blocked;
 	private double[] averageQueueLength;
@@ -37,6 +41,9 @@ public class Reporter extends SimulationProcess
 	public Reporter(int numSamples, int samplingInterval, Operation theater) {
 		interval = samplingInterval;
 		averageThroughput = new double[numSamples];
+		urgentThroughput = new double[numSamples];
+		nonUrgentThroughput = new double[numSamples];
+		totalSurgeryTime = new double[numSamples];
 		utilized = new double[numSamples];
 		blocked = new double[numSamples];
 		averageQueueLength = new double[numSamples];
@@ -57,20 +64,18 @@ public class Reporter extends SimulationProcess
 			} catch (SimulationException | RestartException e ){
 			    //
 			}
-			averageThroughput[sampleCount] = (Recovery.totalThroughput()-oldTotalThroughput)/(Recovery.recovered()-oldRecovered);
-			oldTotalThroughput =+ Recovery.totalThroughput();
-			oldRecovered =+ Recovery.recovered();
 
-			utilized[sampleCount] = 100*(theater.utilizationTime()-oldUtilized)/interval;
-			oldUtilized =+ theater.utilizationTime();
+			averageThroughput[sampleCount] = Recovery.averageThroughput();
+			urgentThroughput[sampleCount] = Recovery.urgentThroughput();
+			nonUrgentThroughput[sampleCount] = Recovery.nonUrgentThroughput();
+			totalSurgeryTime[sampleCount] = theater.totalSurgeryTime();
 
-			blocked[sampleCount] = 100*(theater.blockedTime()-oldBlocked)/interval;
-			oldBlocked =+ theater.blockedTime();
+			utilized[sampleCount] = 100*(theater.utilizationTime()/ interval);
+
+			blocked[sampleCount] = 100*(theater.blockedTime()/ interval);
 
 			averageQueueLength[sampleCount] = Preparation.averageQueueLength();
-
-			patientsOperated[sampleCount] = theater.patientsOperated()-oldPatientsOperated;
-			oldPatientsOperated =+ theater.patientsOperated();
+			patientsOperated[sampleCount] = theater.patientsOperated();
 
 			sampleCount++;
 		}
@@ -82,22 +87,27 @@ public class Reporter extends SimulationProcess
      * @param numSamples number of samples
      */
 	public void report(int numSamples) {
-		for (int i = 0; i < numSamples; i++) {
-			System.out.println(
-					(i+1)*interval + " "
-					+ averageThroughput[i] + " "
-					+ utilized[i] + " "
-					+ blocked[i] + " "
+		//for (int i = 0; i < numSamples; i++) {
+			//System.out.println(
+					//(i+1)*interval + " "
+					//+ averageThroughput[i] + " "
+					//+ urgentThroughput[i] + " "
+					//+ nonUrgentThroughput[i] + " "
+					//+ totalSurgeryTime[i] + " "
+					//+ utilized[i] + " "
+					//+ blocked[i] + " "
 					//+ averageQueueLength[i] + " "
-					+ patientsOperated[i]
-					);
-		}
-        System.out.println("The mean time patient spent in the hospital was: " + arrayMean(averageThroughput));
-        System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(arrayConfidence(averageThroughput,1.96)));
-        System.out.println("The mean utilization percentage was: " + arrayMean(utilized));
+					//+ patientsOperated[i]
+					//);
+		//}
+		System.out.println("The mean utilization was: " + arrayMean(utilized));
+		System.out.println("The mean queue length was: " + arrayMean(averageQueueLength) + " patients");
+        System.out.println("The interval estimate lower and upper bounds at 95% confidence for queue length were: " + Arrays.toString(arrayConfidence(averageQueueLength,1.96)));
         System.out.println("The mean blocked percentage was: " + arrayMean(blocked));
+        System.out.println("The interval estimate lower and upper bounds at 95% confidence for blocking were: " + Arrays.toString(arrayConfidence(blocked,1.96)));
+
 	}
-	
+
     /**
      * @return returns the mean of the array as a double.
      * @param array the array from which the mean is calculated.
@@ -108,7 +118,7 @@ public class Reporter extends SimulationProcess
 	        total += value;
 	    }
         return total/array.length;
-	    
+
 	}
 	
 	 /**
@@ -123,9 +133,9 @@ public class Reporter extends SimulationProcess
         }
         double variance = difference / array.length;
         return Math.sqrt(variance);
-        
+
     }
-    
+
     /**
     * @return returns the interval estimates upper and lower bound in a double array.
     * @param array the array from which the interval estimate is calculated.
@@ -136,7 +146,7 @@ public class Reporter extends SimulationProcess
        double deviation = arrayDeviation(array);
        double confInterval = confLevel * deviation / Math.sqrt(array.length);
        return new double[]{mean - confInterval, mean + confInterval};
-       
+
    }
 
 }
