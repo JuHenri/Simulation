@@ -55,7 +55,7 @@ public class Hospital extends SimulationProcess {
 				monitor.report(j, numSamples);
 				System.out.println();
 			}
-			monitor.reportPair(0, 1);
+			monitor.reportSignificance();
 			generator.terminate();
 			op.terminate();
             Simulation.stop();

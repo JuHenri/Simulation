@@ -94,18 +94,19 @@ public class Reporter
         System.out.println("The mean blocked percentage was: " + arrayMean(blocked[numExperiment]));
 	}
 	
-
-    /**
-     * Compare pair of experiments statistical significance
-     * @param first first experiment
-     * @parem second second experiment
-     */
-	public void reportPair(int first, int second) {
-        System.out.println("Paired difference was statistically significant: " + pairedTTest(blocked[first],blocked[second],2.093));
-	}
-
-
 	/**
+	 * Checks and prints if differences between runs were significant
+	 */
+	public void reportSignificance() {
+	    System.out.println("Difference in utilization between runs 1/2 was statistically significant: " + pairedTTest(utilized[0],utilized[1],1.328));
+	    System.out.println("Difference in utilization between runs 2/3 was statistically significant: " + pairedTTest(utilized[1],utilized[2],1.328));
+	    System.out.println("Difference in utilization between runs 1/3 was statistically significant: " + pairedTTest(utilized[1],utilized[2],1.328));
+	    System.out.println("Difference in blocking between runs 1/2 was statistically significant: " + pairedTTest(blocked[0],blocked[1],1.328));
+	    System.out.println("Difference in blocking between runs 2/3 was statistically significant: " + pairedTTest(blocked[1],blocked[2],1.328));
+	    System.out.println("Difference in blocking between runs 1/3 was statistically significant: " + pairedTTest(blocked[1],blocked[2],1.328));
+	}
+	
+    /**
      * @return returns the mean of the array as a double.
      * @param array the array from which the mean is calculated.
      */
@@ -145,7 +146,13 @@ public class Reporter
        return new double[]{mean - confInterval, mean + confInterval};
    }
    
-   
+   /**
+   * @return true if the difference is statistically significant.
+   * @param array_One the first array for the calculation.
+   * @param array_Two the second array for the calculation.
+   * @param confLevel https://i.stack.imgur.com/PiSUh.png df value for array_One.length - 1 with the prefered confidence level.
+   * @example for 20 observations at 95% confidence. confLevel/df value would be: 2.093
+   */
    private boolean pairedTTest(double[] array_One,double[] array_Two, double confLevel) {
        int i = 0;
        double[] differences = new double[array_One.length];
