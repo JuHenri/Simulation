@@ -72,10 +72,12 @@ public class Hospital extends SimulationProcess {
 				}
 				monitor.report(numSamples);
 				System.out.println();
+				Preparation.terminateAll();
+				Recovery.terminateAll();
 			}
 			generator.terminate();
-            Simulation.stop();
 			op.terminate();
+            Simulation.stop();
             SimulationProcess.mainResume();
 		} catch (Exception e) {
 			e.printStackTrace();

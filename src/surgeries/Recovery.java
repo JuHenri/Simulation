@@ -136,4 +136,9 @@ public class Recovery extends SimulationProcess {
 		urgentThroughput = 0;
 		FREE.clear();
 	}
+	
+	
+	public static void terminateAll() {
+		for (Recovery r : FREE) r.terminate();
+	}
 }

@@ -163,4 +163,9 @@ public class Preparation extends SimulationProcess {
 		prepared = 0;
 		totalTime = 0;
 	}
+	
+	
+	public static void terminateAll() {
+		for (Preparation p : FREE) p.terminate();
+	}
 }
