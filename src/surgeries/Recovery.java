@@ -54,7 +54,7 @@ public class Recovery extends SimulationProcess {
     public static void push(Patient p) {
         try {
             next = p;
-            FREE.pop().activate();
+            if (!FREE.empty()) FREE.pop().activate();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,6 +107,7 @@ public class Recovery extends SimulationProcess {
         while (!terminated() && next != null) {
             do {
                 Patient p = next;
+                next = null;
                 double startTime = currentTime();
                 p.setRecoveryStartTime(startTime);
                 try {
