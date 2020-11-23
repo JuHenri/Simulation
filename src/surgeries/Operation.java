@@ -137,7 +137,7 @@ public class Operation extends SimulationProcess {
      * @return the amount of time there has been an operation going on in the theater
      */
     public double utilizationTime() {
-    	return utilizationTime;
+    	return totalTime;
     }
     
     
