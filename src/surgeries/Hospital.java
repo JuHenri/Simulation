@@ -40,10 +40,9 @@ public class Hospital extends SimulationProcess {
 			setupFacilities(op);
 			Simulation.start();
 			generator.activate();
-			monitor.activate();            
 			for (int i = 0; i < numSamples; i++) {
 			    double startTime = currentTime();
-				hold(samplingInterval + 1);
+				hold(samplingInterval);
 				double totalTime = currentTime() - startTime;
 				op.updateBlocking();
 				System.out.println("Run: "+(i+1));
@@ -58,6 +57,7 @@ public class Hospital extends SimulationProcess {
 				System.out.println("The average entry queue length was "+Preparation.averageQueueLength());
 				System.out.println("Patients operated: "+op.patientsOperated());
 				System.out.println("----------");
+				monitor.update();
 	            Preparation.reset();
 	            Recovery.reset();
 	            setupFacilities(op);
