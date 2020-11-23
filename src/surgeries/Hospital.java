@@ -15,11 +15,11 @@ public class Hospital extends SimulationProcess {
 	
 	// the questionable parameters about the hospital capacity and its service times
 	private int patientInterval = 25;
-	private int numPreparationUnits = 3;
+	private int numPreparationUnits = 4;
 	private int preparationTime = 40;
 	private int numOperationUnits = 1; // not in use (yet)
 	private int operationTime = 20;
-	private int numRecoveryUnits = 4;
+	private int numRecoveryUnits = 5;
 	private int recoveryTime = 40;
 	private double urgentPercentage = 10;
 	private int numSamples = 20;

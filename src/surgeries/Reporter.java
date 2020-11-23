@@ -95,7 +95,7 @@ public class Reporter extends SimulationProcess
 					//+ patientsOperated[i]
 					//);
 		//}
-		System.out.println("The mean utilization was: " + arrayMean(totalSurgeryTime)/10 + " %");
+		System.out.println("The mean utilization was: " + arrayMean(utilized));
 		System.out.println("The mean queue length was: " + arrayMean(averageQueueLength) + " patients");
         System.out.println("The interval estimate lower and upper bounds at 95% confidence for queue length were: " + Arrays.toString(arrayConfidence(averageQueueLength,1.96)));
         System.out.println("The mean blocked percentage was: " + arrayMean(blocked));
