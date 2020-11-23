@@ -92,10 +92,20 @@ public class Reporter
         System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(arrayConfidence(averageThroughput[numExperiment],1.96)));
         System.out.println("The mean utilization percentage was: " + arrayMean(utilized[numExperiment]));
         System.out.println("The mean blocked percentage was: " + arrayMean(blocked[numExperiment]));
-        System.out.println("Paired difference was statistically significant: " + pairedTTest(blocked[0],blocked[1],2.093));
 	}
 	
+
     /**
+     * Compare pair of experiments statistical significance
+     * @param first first experiment
+     * @parem second second experiment
+     */
+	public void reportPair(int first, int second) {
+        System.out.println("Paired difference was statistically significant: " + pairedTTest(blocked[first],blocked[second],2.093));
+	}
+
+
+	/**
      * @return returns the mean of the array as a double.
      * @param array the array from which the mean is calculated.
      */

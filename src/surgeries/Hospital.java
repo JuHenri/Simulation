@@ -35,12 +35,12 @@ public class Hospital extends SimulationProcess {
 			// Preparation and recovery facilities are stored to arrays.
 			Simulation.start();
 			Arrivals generator = new Arrivals(patientInterval, urgentPercentage/100);
+			Reporter monitor = new Reporter(preparationCapacities.length, numSamples, samplingInterval, op);
 			generator.activate();
 			for (int j = 0; j < preparationCapacities.length; j++) {
 				int numPreparationUnits = preparationCapacities[j];
 				int numRecoveryUnits = recoveryCapacities[j];
 				System.out.println("Experiment "+(j+1)+": "+numPreparationUnits+" preparation units and "+numRecoveryUnits+" recovery units.");
-				Reporter monitor = new Reporter(preparationCapacities.length, numSamples, samplingInterval, op);
 				for (int i = 0; i < numSamples; i++) {
 					Preparation[] preparations = new Preparation[numPreparationUnits];
 					for (int k = 0; k < numPreparationUnits; k++) preparations[k] = new Preparation(preparationTime, op);
@@ -55,6 +55,7 @@ public class Hospital extends SimulationProcess {
 				monitor.report(j, numSamples);
 				System.out.println();
 			}
+			monitor.reportPair(0, 1);
 			generator.terminate();
 			op.terminate();
             Simulation.stop();
