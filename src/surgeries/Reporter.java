@@ -92,6 +92,7 @@ public class Reporter
         System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(arrayConfidence(averageThroughput[numExperiment],1.96)));
         System.out.println("The mean utilization percentage was: " + arrayMean(utilized[numExperiment]));
         System.out.println("The mean blocked percentage was: " + arrayMean(blocked[numExperiment]));
+        System.out.println("Paired difference was statistically significant: " + pairedTTest(blocked[0],blocked[1],2.093));
 	}
 	
     /**
@@ -133,5 +134,23 @@ public class Reporter
        double confInterval = confLevel * deviation / Math.sqrt(array.length);
        return new double[]{mean - confInterval, mean + confInterval};
    }
+   
+   
+   private boolean pairedTTest(double[] array_One,double[] array_Two, double confLevel) {
+       int i = 0;
+       double[] differences = new double[array_One.length];
+       for(double value : array_One) {
+           differences[i] = value - array_Two[i];
+           i++;
+       }
+       double mean = arrayMean(differences);
+       double s_deviation = arrayDeviation(differences);
+       double s_error = s_deviation / Math.sqrt(array_One.length);
+       double t = mean / s_error;
+       if (t > confLevel)return true;
+       return false;
+       
+   }
+
 
 }
