@@ -98,12 +98,16 @@ public class Reporter
 	 * Checks and prints if differences between runs were significant
 	 */
 	public void reportSignificance() {
+	    System.out.println("Confidence level/interval 80%");
 	    System.out.println("Difference in utilization between runs 1/2 was statistically significant: " + pairedTTest(utilized[0],utilized[1],1.328));
 	    System.out.println("Difference in utilization between runs 2/3 was statistically significant: " + pairedTTest(utilized[1],utilized[2],1.328));
 	    System.out.println("Difference in utilization between runs 1/3 was statistically significant: " + pairedTTest(utilized[1],utilized[2],1.328));
 	    System.out.println("Difference in blocking between runs 1/2 was statistically significant: " + pairedTTest(blocked[0],blocked[1],1.328));
 	    System.out.println("Difference in blocking between runs 2/3 was statistically significant: " + pairedTTest(blocked[1],blocked[2],1.328));
 	    System.out.println("Difference in blocking between runs 1/3 was statistically significant: " + pairedTTest(blocked[1],blocked[2],1.328));
+	    System.out.println("Difference in average queue length between runs 1/2 was statistically significant: " + pairedTTest(averageQueueLength[0],averageQueueLength[1],1.328));
+        System.out.println("Difference in average queue length between runs 2/3 was statistically significant: " + pairedTTest(averageQueueLength[1],averageQueueLength[2],1.328));
+        System.out.println("Difference in average queue length between runs 1/3 was statistically significant: " + pairedTTest(averageQueueLength[1],averageQueueLength[2],1.328));
 	}
 	
     /**
