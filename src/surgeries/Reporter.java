@@ -20,7 +20,7 @@ public class Reporter
 	private double[] blocked;
 	private double[] averageQueueLength;
 	private int[] patientsOperated;
-	private Operation theater;
+	private static Operation theater;
 
 
 	/**
@@ -54,17 +54,16 @@ public class Reporter
 			blocked[sampleCount] = 100*(theater.blockedTime()/ interval);
 			
 			averageQueueLength[sampleCount] = Preparation.averageQueueLength();
-			patientsOperated[sampleCount] = theater.patientsOperated();
-
-			sampleCount++;
+			patientsOperated[sampleCount++] = theater.patientsOperated();
 	}
 
 
     /**
-     * Print collected stats. TODO: calculate means, etc.
+     * Print collected stats.
      * @param numSamples number of samples
      */
 	public void report(int numSamples) {
+		/*
 		for (int i = 0; i < numSamples; i++) {
 			System.out.println(
 					(i+1)*interval + " "
@@ -78,50 +77,10 @@ public class Reporter
 					+ patientsOperated[i]
 			);
 		}
-        System.out.println("The mean time patient spent in the hospital was: " + arrayMean(averageThroughput));
-        System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(arrayConfidence(averageThroughput,1.96)));
-        System.out.println("The mean utilization percentage was: " + arrayMean(utilized));
-        System.out.println("The mean blocked percentage was: " + arrayMean(blocked));
+		*/
+        System.out.println("The mean time patient spent in the hospital was: " + Statistics.mean(averageThroughput));
+        System.out.println("The interval estimate lower and upper bounds at 95% confifedence for patient time in hospital were: " + Arrays.toString(Statistics.confidence(averageThroughput,1.96)));
+        System.out.println("The mean utilization percentage was: " + Statistics.mean(utilized));
+        System.out.println("The mean blocked percentage was: " + Statistics.mean(blocked));
 	}
-	
-    /**
-     * @return returns the mean of the array as a double.
-     * @param array the array from which the mean is calculated.
-     */
-	private double arrayMean(double[] array) {
-	    double total = 0;
-	    for(double value : array){
-	        total += value;
-	    }
-        return total/array.length;
-	    
-	}
-	
-	 /**
-     * @return returns the standard deviation as a double.
-     * @param array the array from which the standard deviation is calculated.
-     */
-    private double arrayDeviation(double[] array) {
-        Double mean = arrayMean(array);
-        double difference = 0;
-        for (double value : array) {
-            difference += (value - mean) * (value - mean);
-        }
-        double variance = difference / array.length;
-        return Math.sqrt(variance);
-        
-    }
-    
-    /**
-    * @return returns the interval estimates upper and lower bound in a double array.
-    * @param array the array from which the interval estimate is calculated.
-    * @param confLevel https://i.stack.imgur.com/PiSUh.png find z value for the percentage you are looking for.
-    */
-   private double[] arrayConfidence(double[] array,double confLevel) {
-       double mean = arrayMean(array);
-       double deviation = arrayDeviation(array);
-       double confInterval = confLevel * deviation / Math.sqrt(array.length);
-       return new double[]{mean - confInterval, mean + confInterval};
-   }
-
 }

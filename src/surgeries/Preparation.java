@@ -131,12 +131,12 @@ public class Preparation extends SimulationProcess {
      * Must be called just before the queue changes.
      */
     public static void updateQueueStatistics() {
-        double t = currentTime();
         if (queueTimes.length <= QUEUE.size()) {
             double[] newTimes = new double[queueTimes.length*2];
             for (int i = 0; i < queueTimes.length; i++) newTimes[i] = queueTimes[i];
             queueTimes = newTimes;
         }
+        double t = currentTime();
         queueTimes[QUEUE.size()] += t - lastTimeQueueChanged;
         lastTimeQueueChanged = t;
     }

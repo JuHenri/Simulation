@@ -51,12 +51,17 @@ public class Recovery extends SimulationProcess {
      * Starts the recovery of a given patient. The caller must first check if there are free facilities available.
      * @param p the patient object being pushed.
      */
-    public static void push(Patient p) {
+    public static boolean push(Patient p) {
         try {
             next = p;
-            if (!FREE.empty()) FREE.pop().activate();
+            if (!free()) return false;
+            double t = currentTime();
+            next.setOperationEndTime(t);
+            FREE.pop().activate();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -70,11 +75,11 @@ public class Recovery extends SimulationProcess {
 
     /**
      * @return the average time between the arrival to the system and the recovery end of a recovered urgent patient.
-     * If there were 0 urgent patients returns a -1;
+     * If there were 0 urgent patients returns 0;
      */
     public static double urgentThroughput() {
-        if (numUrgent != 0)return urgentThroughput/numUrgent;
-        return -1;
+        if (numUrgent != 0) return urgentThroughput/numUrgent;
+        return 0;
     }
 
     /**
@@ -104,10 +109,15 @@ public class Recovery extends SimulationProcess {
 	 */
 	@Override
     public void run() {
-        while (!terminated() && next != null) {
-            do {
+        while (!terminated()) {
+            while (next != null) {
                 Patient p = next;
                 next = null;
+                if (theater.blocked()) try {
+					theater.activate();
+				} catch (SimulationException | RestartException e) {
+					e.printStackTrace();
+				}
                 double startTime = currentTime();
                 p.setRecoveryStartTime(startTime);
                 try {
@@ -123,16 +133,8 @@ public class Recovery extends SimulationProcess {
                     urgentThroughput += t - p.getPreparationStartTime();
                 }
                 p.setRecoveryEndTime(t);
-                FREE.push(this);
-                // If the theater is blocked, there is a free facility for it.
-                if (theater.blocked())
-                    try {
-                        theater.activate();
-                    } catch (SimulationException | RestartException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-            } while (theater.blocked()); // If the theater is blocked, this facility can be straightly reserved for it
+            }
+            FREE.push(this);
             try {
                 passivate();
             } catch (RestartException e) {
@@ -140,7 +142,6 @@ public class Recovery extends SimulationProcess {
             }
         }
     }
-
 
     /**
      * Resets the static attributes to their initial value/state to enable a new simulation
@@ -153,4 +154,5 @@ public class Recovery extends SimulationProcess {
         numUrgent = 0;
         urgentThroughput = 0;
     }
+    
 }

@@ -21,7 +21,6 @@ public class Operation extends SimulationProcess {
     private int surgeriesCompleted = 0;
     private double totalTime = 0;
     private Patient underOperation;
-    private boolean blocked;
     private double blockedTime = 0;
     private double blockedStart = 0;
     
@@ -47,7 +46,7 @@ public class Operation extends SimulationProcess {
 			// add patient to the end of the queue
 			QUEUE.add(p);
 		}
-		if (!blocked && underOperation == null) {
+		if (!blocked()) {
 			try {
 				activate();
 			} catch (SimulationException | RestartException e) {
@@ -76,35 +75,28 @@ public class Operation extends SimulationProcess {
     @Override
     public void run() {
         while (!terminated()) {
-        	// If blocked is true, operation was activated because a recovery facility was freed. 
+        	// If blocked returns true, operation was activated because a recovery facility was freed. 
         	// Otherwise, there is a new patient alone in the queue.
-        	if (blocked) {
-        	    underOperation.setOperationEndTime(currentTime());
-        	    blockedTime += currentTime() - blockedStart;
-        	}
-        	blocked = false;
-            while (!blocked && !QUEUE.isEmpty()) {
+        	if (blocked()) blockedTime += currentTime() - blockedStart;
+            while (!QUEUE.isEmpty()) {
                 underOperation = QUEUE.poll();
                 try {
+                	double begin = currentTime();
                     double t = operationTime.getNumber();
                     hold(t);
+                    totalTime += currentTime() - begin;
                     // If the sample got terminated when there was a surgery going on
                     if (underOperation == null) break; 
-                    totalTime += t;
                     surgeriesCompleted++;
-                    blocked = !Recovery.free();
-                    Recovery.push(underOperation);
-                    if (blocked) blockedStart = currentTime();
+                    if (!Recovery.push(underOperation)) {
+                    	blockedStart = currentTime();
+                    	break;
+                    }
+                    underOperation = null;
                 } catch (ArithmeticException | SimulationException | RestartException | IOException e) {
                     e.printStackTrace();
                 }
             }
-            // If the loop ended because the operation queue drained and not because all recovery facilities were blocked, there is no patient in the theater.
-            if (!blocked && underOperation != null) {
-            	underOperation.setOperationEndTime(currentTime());
-            	underOperation = null;
-            }
-            // If the while loop ended because the sample was terminated, utilization time must not be count.
             try {
                 this.passivate();
             } catch (RestartException e) {
@@ -142,14 +134,7 @@ public class Operation extends SimulationProcess {
      * @return is the theater blocked because all the recovery facilities are reserved
      */
     public boolean blocked() {
-    	return blocked;
-    }
-    
-    /**
-     * @return the time the operation theathre was blocked.
-     */
-    public double blockedTime() {
-        return blockedTime;
+    	return underOperation != null && !Recovery.free();
     }
     
     public void reset() {
@@ -157,8 +142,15 @@ public class Operation extends SimulationProcess {
         surgeriesCompleted = 0;
         totalTime = 0;
         underOperation = null;
-        blocked = false;
         blockedTime = 0;
-        blockedStart = 0;
     }
+    
+    
+    
+    /**
+     * @return the total amount of time the theater has been blocked from delivering the patient to recovery
+     */
+    public double blockedTime() {
+        return blockedTime;
+    }   
 }
