@@ -76,7 +76,7 @@ public class Hospital extends SimulationProcess {
 					int r2 = recoveryCapacities[j];
 					System.out.println("Analyzing the difference between results of "+p1+"P"+r1+"R"+" and "+p2+"P"+r2+"R.");
 					double sd = Math.sqrt(queueVariance[i] + queueVariance[j]);
-					double mean = Math.abs(queueMean[i] - blockedMean[j]);
+					double mean = Math.abs(queueMean[i] - queueMean[j]);
 					double[] confInterval = new double[] {mean - 1.96*sd/Math.sqrt(numSamples), mean + 1.96*sd/Math.sqrt(numSamples)};
 					System.out.println("The interval estimate lower and upper bounds at 95% confidence for the average entry queue length difference were: "+Arrays.toString(confInterval));
 					sd = Math.sqrt(blockedVariance[i] + blockedVariance[j]);
