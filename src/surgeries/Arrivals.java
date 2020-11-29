@@ -6,6 +6,7 @@ import org.javasim.RestartException;
 import org.javasim.SimulationException;
 import org.javasim.SimulationProcess;
 import org.javasim.streams.ExponentialStream;
+import org.javasim.streams.RandomStream;
 import org.javasim.streams.UniformStream;
 
 /**
@@ -16,7 +17,7 @@ import org.javasim.streams.UniformStream;
  */
 public class Arrivals extends SimulationProcess {
 	
-	private ExponentialStream timeStream;
+	private RandomStream timeStream;
 	private UniformStream urgencyStream;
 	private double pUrgent;
 	
@@ -25,8 +26,8 @@ public class Arrivals extends SimulationProcess {
 	 * @param mean the mean time between two patients arriving
 	 * @param pUrgent the probability of a patient being urgent
 	 */
-	public Arrivals(double mean, double pUrgent) {
-		timeStream = new ExponentialStream(mean);
+	public Arrivals(double mean, double pUrgent, RandomStream stream) {
+		timeStream = stream;
 		urgencyStream = new UniformStream(0, 1);
 		this.pUrgent = pUrgent;
 	}

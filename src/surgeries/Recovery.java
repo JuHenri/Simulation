@@ -7,6 +7,7 @@ import org.javasim.RestartException;
 import org.javasim.SimulationException;
 import org.javasim.SimulationProcess;
 import org.javasim.streams.ExponentialStream;
+import org.javasim.streams.RandomStream;
 
 /**
  * @author Ilari Kauko
@@ -24,7 +25,7 @@ public class Recovery extends SimulationProcess {
     private static int numUrgent = 0;
     private static double urgentThroughput = 0;
 
-    private ExponentialStream recoveryTime;
+    private RandomStream recoveryTime;
     private Operation theater;
 
     /**
@@ -32,8 +33,8 @@ public class Recovery extends SimulationProcess {
      * @param mean used to init the exponentialStram
      * @param theater operation theather being used.
      */
-    public Recovery(double mean, Operation theater) {
-        recoveryTime = new ExponentialStream(mean, 0, 123, 12345);
+    public Recovery(double mean, Operation theater, RandomStream stream) {
+        recoveryTime = stream;
         this.theater = theater;
         FREE.add(this);
     }

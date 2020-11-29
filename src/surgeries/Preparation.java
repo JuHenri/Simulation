@@ -8,6 +8,7 @@ import org.javasim.RestartException;
 import org.javasim.SimulationException;
 import org.javasim.SimulationProcess;
 import org.javasim.streams.ExponentialStream;
+import org.javasim.streams.RandomStream;
 
 
 /**
@@ -30,7 +31,7 @@ public class Preparation extends SimulationProcess {
     private static double totalTime = 0;
     private Operation theater;
     
-    private ExponentialStream preparationTime;
+    private RandomStream preparationTime;
     
     
     /**
@@ -38,8 +39,8 @@ public class Preparation extends SimulationProcess {
      * @param mean the average time preparation takes
      * @param theater the operation room being used.
      */
-    public Preparation(double mean, Operation theater) {
-        preparationTime = new ExponentialStream(mean, 0, 123, 12345);
+    public Preparation(double mean, Operation theater, RandomStream stream) {
+        preparationTime = stream;
         FREE.add(this);
         this.theater = theater;
     }
