@@ -52,4 +52,21 @@ public class Statistics {
        double confInterval = confLevel*standardDeviation(array)/Math.sqrt(array.length);
        return new double[]{mean - confInterval, mean + confInterval};
    }
+   
+   
+   /**
+    * @param s array containing the value of a given variable on regular time intervals
+    * @return an unbiased estimate of the autocorrelation on the variable on corresponding time intervals
+    */
+   public static double[] autocorrelation(double[] s) {
+	   double m = mean(s);
+	   double v = variance(s);
+	   double[] r = new double[s.length];
+	   if (v == 0) return r;
+	   for (int i = 0; i < r.length; i++) {
+		   for (int j = 0; j < r.length - i; j++) r[i] += (s[j] - m)*(s[j + i] - m);
+		   r[i] /= (r.length - i)*v;
+	   }
+	   return r;
+   }
 }

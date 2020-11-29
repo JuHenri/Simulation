@@ -22,8 +22,8 @@ public class Hospital extends SimulationProcess {
 	private int operationTime = 20;
 	private int recoveryTime = 40;
 	private double urgentPercentage = 50;
-	private int numSamples = 20;
-	private int samplingInterval = 1000;
+	private int numSamples = 10;
+	private int samplingInterval = 10000;
 	
 	/**
 	 * run process
@@ -31,43 +31,58 @@ public class Hospital extends SimulationProcess {
 	@Override
 	public void run() {
 		try {
-			int[] preparationCapacities = new int[] {3,3,4};
-			int[] recoveryCapacities = new int[] {4,5,5};
 			Operation op = new Operation(operationTime);
 			Simulation.start();
 			Arrivals generator = new Arrivals(patientInterval, urgentPercentage/100);
 			generator.activate();
+			/*
+			 * assignment 3 code
+			int[] preparationCapacities = new int[] {3,3,4};
+			int[] recoveryCapacities = new int[] {4,5,5};
 			double[] queueMean = new double[preparationCapacities.length];
 			double[] blockedMean = new double[preparationCapacities.length];
 			double[] queueVariance = new double[preparationCapacities.length];
 			double[] blockedVariance = new double[preparationCapacities.length];
-			for (int j = 0; j < preparationCapacities.length; j++) {
+			*/
+			int runs = 10;
+			int numPreparationUnits = 3;
+			int numRecoveryUnits = 3;
+			double[] queueLengths = new double[numSamples];
+			for (int j = 0; j < runs; j++) {
+				/*
+				 * assignment 3 code
 				int numPreparationUnits = preparationCapacities[j];
 				int numRecoveryUnits = recoveryCapacities[j];
 				System.out.println("Experiment "+(j+1)+": "+numPreparationUnits+" preparation units and "+numRecoveryUnits+" recovery units.");
 				Reporter monitor = new Reporter(numSamples, samplingInterval, op);
 				double totalQueueTime = 0;
 				double totalBlockedTime = 0;
-				double[] queueResults = new double[numSamples];
 				double[] blockedResults = new double[numSamples];
+				*/
+				for (int i = 0; i < numPreparationUnits; i++) new Preparation(preparationTime, op);
+				for (int i = 0; i < numRecoveryUnits; i++) new Recovery(recoveryTime, op);
 				for (int i = 0; i < numSamples; i++) {
-					for (int k = 0; k < numPreparationUnits; k++) new Preparation(preparationTime, op);
-					for (int k = 0; k < numRecoveryUnits; k++) new Recovery(recoveryTime, op);
 					hold(samplingInterval + 1);
-					monitor.update();
-					queueResults[i] = Preparation.averageQueueLength();
-					blockedResults[i] = 100*op.blockedTime()/samplingInterval;
-					Preparation.reset();
-					Recovery.reset();
-					op.reset();
+					queueLengths[i] += Preparation.queueLength();
 				}
+				Preparation.reset();
+				Recovery.reset();
+				op.reset();
+				/*
 				queueMean[j] = Statistics.mean(queueResults);
 				blockedMean[j] = Statistics.mean(blockedResults);
 				queueVariance[j] = Statistics.variance(queueResults);
 				blockedVariance[j] = Statistics.variance(blockedResults);
 				monitor.report(numSamples);
 				System.out.println();
+				*/
 			}
+			// The array queueLengths stores the mean of the queue length at each moment, not sum
+			for (int i = 0; i < numSamples; i++) queueLengths[i] /= runs;
+			double[] correlations = Statistics.autocorrelation(queueLengths);
+			for (int i = 0; i < correlations.length; i++) System.out.println("Autocorrelation on delay "+(i*samplingInterval)+": "+correlations[i]);
+			/*
+			 * assignment 3 code
 			for (int i = 0; i < preparationCapacities.length; i++) {
 				int p1 = preparationCapacities[i];
 				int r1 = recoveryCapacities[i];
@@ -85,6 +100,7 @@ public class Hospital extends SimulationProcess {
 					System.out.println("The interval estimate lower and upper bounds at 95% confidence for the difference of probability of the operating theater being blocked were: "+Arrays.toString(confInterval));
 				}
 			}
+			*/
 			generator.terminate();
 			op.terminate();
             Simulation.stop();

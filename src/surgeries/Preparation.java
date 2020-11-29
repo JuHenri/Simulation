@@ -156,6 +156,14 @@ public class Preparation extends SimulationProcess {
     
     
     /**
+     * @return the length of the entry queue at the moment
+     */
+    public static int queueLength() {
+    	return QUEUE.size();
+    }
+    
+    
+    /**
      * Resets the static attributes to their initial value/state to enable a new simulation
      */
     public static void reset() {
