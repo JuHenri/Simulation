@@ -36,10 +36,10 @@ public class Preparation extends SimulationProcess {
     
     /**
      * constructor
-     * @param mean the average time preparation takes
+     * @param stream random stream to be used
      * @param theater the operation room being used.
      */
-    public Preparation(double mean, Operation theater, RandomStream stream) {
+    public Preparation(RandomStream stream, Operation theater) {
         preparationTime = stream;
         FREE.add(this);
         this.theater = theater;

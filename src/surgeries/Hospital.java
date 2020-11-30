@@ -19,13 +19,17 @@ public class Hospital extends SimulationProcess {
 	
 	// the questionable parameters about the hospital capacity and its service times
 	private double patientInterval = 25;
+	private int numPreparationUnits = 3;
 	private int preparationTime = 40;
 	private int numOperationUnits = 1; // not in use (yet)
 	private int operationTime = 20;
+	private int numRecoveryUnits = 3;
 	private int recoveryTime = 40;
 	private double urgentPercentage = 50;
-	private int numSamples = 25;
-	private int samplingInterval = 3;
+	private int simulationRuns = 10;
+	private int simulationTime = 10000;
+	private int numSamples = 10;
+	private int samplingInterval = simulationTime/numSamples;
 	
 	/**
 	 * run process
@@ -46,11 +50,10 @@ public class Hospital extends SimulationProcess {
 			double[] queueVariance = new double[preparationCapacities.length];
 			double[] blockedVariance = new double[preparationCapacities.length];
 			*/
-			int runs = 100;
-			int numPreparationUnits = 4;
-			int numRecoveryUnits = 4;
+			for (int i = 0; i < numPreparationUnits; i++) new Preparation(new ExponentialStream(preparationTime), op);
+			for (int i = 0; i < numRecoveryUnits; i++) new Recovery(new ExponentialStream(recoveryTime), op);
 			double[] queueLengths = new double[numSamples];
-			for (int j = 0; j < runs; j++) {
+			for (int j = 0; j < simulationRuns; j++) {
 				/*
 				 * assignment 3 code
 				int numPreparationUnits = preparationCapacities[j];
@@ -61,10 +64,8 @@ public class Hospital extends SimulationProcess {
 				double totalBlockedTime = 0;
 				double[] blockedResults = new double[numSamples];
 				*/
-				for (int i = 0; i < numPreparationUnits; i++) new Preparation(preparationTime, op, new ExponentialStream(40, i, j, i*j));
-				for (int i = 0; i < numRecoveryUnits; i++) new Recovery(recoveryTime, op, new ExponentialStream(40, i*j, j, i));
 				for (int i = 0; i < numSamples; i++) {
-					hold(samplingInterval + 1);
+					hold(samplingInterval);
 					queueLengths[i] += Preparation.queueLength();
 				}
 				Preparation.reset();
@@ -80,10 +81,11 @@ public class Hospital extends SimulationProcess {
 				*/
 			}
 			// The array queueLengths stores the mean of the queue length at each moment, not sum
-			for (int i = 0; i < numSamples; i++) queueLengths[i] /= runs;
+			for (int i = 0; i < numSamples; i++) queueLengths[i] /= simulationRuns;
+			for (int i = 0; i < numSamples; i++) System.out.println("Average queue length on delay "+((i+1)*samplingInterval)+": "+queueLengths[i]);
 			double[] correlations = Statistics.autocorrelation(queueLengths);
 			System.out.println("TESTING AUTOCORRELATION");
-			for (int i = 0; i < correlations.length; i++) System.out.println("Autocorrelation on delay "+(i*samplingInterval)+": "+correlations[i]);
+			for (int i = 0; i < correlations.length; i++) System.out.println("Autocorrelation on delay "+((i+1)*samplingInterval)+": "+correlations[i]);
 			/*
 			 * assignment 3 code
 			for (int i = 0; i < preparationCapacities.length; i++) {
