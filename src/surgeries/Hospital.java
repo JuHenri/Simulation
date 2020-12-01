@@ -68,8 +68,8 @@ public class Hospital extends SimulationProcess {
 				double[] blockedResults = new double[numSamples];
 				*/
 				double[] queueLengths = new double[numSamples];
-				for (int i = 0; i < numPreparationUnits; i++) preps[i] = new Preparation(preparationTime, op, prepStream);
-				for (int i = 0; i < numRecoveryUnits; i++) recs[i] = new Recovery(recoveryTime, op, recStream);
+				for (int i = 0; i < numPreparationUnits; i++) preps[i] = new Preparation(prepStream, op);
+				for (int i = 0; i < numRecoveryUnits; i++) recs[i] = new Recovery(recStream, op);
 				for (int i = 0; i < numSamples; i++) {
 					hold(samplingInterval);
 					queueLengths[i] = Preparation.queueLength();
@@ -150,8 +150,8 @@ public class Hospital extends SimulationProcess {
 				recs = new Recovery[capacities[1][design[i][5]]];
 				double averageQueueLength = 0;
 				for (int j = 0; j < runs; j++) {
-					for (int k = 0; k < capacities[0][design[i][4]]; k++) preps[k] = new Preparation(preparationTime, op, streams[2][design[i][0]]);
-					for (int k = 0; k < capacities[1][design[i][5]]; k++) recs[k] = new Recovery(recoveryTime, op, streams[3][design[i][1]]);
+					for (int k = 0; k < capacities[0][design[i][4]]; k++) preps[k] = new Preparation(streams[2][design[i][0]], op);
+					for (int k = 0; k < capacities[1][design[i][5]]; k++) recs[k] = new Recovery(streams[3][design[i][1]], op);
 					for (int k = 0; k < numSamples; k++) {
 						hold(samplingInterval);
 					}

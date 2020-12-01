@@ -30,10 +30,10 @@ public class Recovery extends SimulationProcess {
 
     /**
      * constructor
-     * @param mean used to init the exponentialStram
-     * @param theater operation theather being used.
+     * @param stream random stream to be used
+     * @param theater the operation room being used.
      */
-    public Recovery(double mean, Operation theater, RandomStream stream) {
+    public Recovery(RandomStream stream, Operation theater) {
         recoveryTime = stream;
         this.theater = theater;
         FREE.push(this);
