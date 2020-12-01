@@ -26,7 +26,7 @@ public class Arrivals extends SimulationProcess {
 	 * @param mean the mean time between two patients arriving
 	 * @param pUrgent the probability of a patient being urgent
 	 */
-	public Arrivals(double mean, double pUrgent, RandomStream stream) {
+	public Arrivals(double pUrgent, RandomStream stream) {
 		timeStream = stream;
 		urgencyStream = new UniformStream(0, 1);
 		this.pUrgent = pUrgent;

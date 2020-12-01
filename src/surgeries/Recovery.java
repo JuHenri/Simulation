@@ -36,7 +36,7 @@ public class Recovery extends SimulationProcess {
     public Recovery(double mean, Operation theater, RandomStream stream) {
         recoveryTime = stream;
         this.theater = theater;
-        FREE.add(this);
+        FREE.push(this);
     }
 
     /**

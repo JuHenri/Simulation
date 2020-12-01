@@ -69,4 +69,13 @@ public class Statistics {
 	   }
 	   return r;
    }
+   
+   
+   public static double covariance(double[] a, double[] b) {
+	   double meanA = mean(a);
+	   double meanB = mean(b);
+	   double sum = 0;
+	   for (int i = 0; i < a.length; i++) sum += (a[i] - meanA)*(b[i] - meanB);
+	   return sum/a.length;
+   }
 }

@@ -41,7 +41,7 @@ public class Preparation extends SimulationProcess {
      */
     public Preparation(double mean, Operation theater, RandomStream stream) {
         preparationTime = stream;
-        FREE.add(this);
+        FREE.push(this);
         this.theater = theater;
     }
     
