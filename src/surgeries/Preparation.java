@@ -157,6 +157,20 @@ public class Preparation extends SimulationProcess {
     
     
     /**
+     * @return the variance of the queue length
+     */
+    public static double varianceQueueLength() {
+    	double mean = averageQueueLength();
+    	double squareSum = 0;
+    	double timeSum = 0;
+    	for (int i = 0; i < queueTimes.length; i++) {
+    		squareSum += queueTimes[i]*(i - mean)*(i - mean);
+    		timeSum += queueTimes[i];
+    	}
+    	return squareSum/timeSum;
+    }
+    
+    /**
      * @return the length of the entry queue at the moment
      */
     public static int queueLength() {

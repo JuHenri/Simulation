@@ -125,37 +125,40 @@ public class Hospital extends SimulationProcess {
 			};
 			int[][] capacities = new int[][] {
 				{4,5},
-				{4,5}
-			};
+				{4,5}};
 			// The numbers in this matrix are used to refer to the indexes of the former arrays.
 			// The first column tells whether exponential or uniform distributions are used in arrivals.
 			// The second column tells the mean of the distribution.
 			// The third and fourth tell the distribution used by preparations and recoveries.
 			// The fifth and sixth tell their capacities.
 			int[][] design = new int[][] {
-				{1,1,1,0,0,0},
-				{1,1,0,1,1,0},
-				{1,0,1,1,0,0},
-				{1,0,0,1,0,0},
-				{0,1,1,0,0,1},
-				{0,1,0,0,1,0},
-				{0,0,1,1,0,1},
-				{0,0,0,0,1,1},
+				{0,0,0,0,0,0},
+				{1,0,0,0,0,0},
+				{0,1,0,0,0,0},
+				{1,1,0,0,0,0},
+				{0,0,1,0,0,0},
+				{0,0,0,1,0,0},
+				{0,0,0,0,1,0},
+				{0,0,0,0,0,1}
 			};
+			runs = 25;
+			double[] y = new double[design.length];
+			double[] var = new double[design.length];
+			System.out.println("TESTING LINEAR MODEL");
 			for (int i = 0; i < design.length; i++) {
 				System.out.println("Experiment "+(i+1));
 				generator = new Arrivals(urgentPercentage/100, streams[design[i][0]][design[i][1]]);
 				generator.activate();
 				preps = new Preparation[capacities[0][design[i][4]]];
 				recs = new Recovery[capacities[1][design[i][5]]];
-				double averageQueueLength = 0;
+				double[] queueLengths = new double[runs*numSamples];
 				for (int j = 0; j < runs; j++) {
-					for (int k = 0; k < capacities[0][design[i][4]]; k++) preps[k] = new Preparation(streams[2][design[i][0]], op);
-					for (int k = 0; k < capacities[1][design[i][5]]; k++) recs[k] = new Recovery(streams[3][design[i][1]], op);
+					for (int k = 0; k < capacities[0][design[i][4]]; k++) preps[k] = new Preparation(streams[2][design[i][2]], op);
+					for (int k = 0; k < capacities[1][design[i][5]]; k++) recs[k] = new Recovery(streams[3][design[i][3]], op);
 					for (int k = 0; k < numSamples; k++) {
 						hold(samplingInterval);
+						queueLengths[j*numSamples + k] = Preparation.queueLength();
 					}
-					averageQueueLength += Preparation.averageQueueLength();
 					Preparation.reset();
 					Recovery.reset();
 					for (Preparation p : preps) p.cancel();
@@ -163,9 +166,26 @@ public class Hospital extends SimulationProcess {
 					op.reset();
 				}
 				generator.cancel();
-				averageQueueLength /= runs;
+				double averageQueueLength = Statistics.mean(queueLengths);
+				double varianceQueueLength = Statistics.variance(queueLengths);
 				System.out.println("Average entry queue length: "+averageQueueLength);
+				System.out.println("Variance of the entry queue length: "+varianceQueueLength);
+				y[i] = averageQueueLength;
+				var[i] = varianceQueueLength;
 			}
+			double[] b = new double[design.length];
+			double[] varB = new double[design.length];
+			for (int j = 0; j < design.length; j++) {
+				b[j] = (y[j] - y[0])/2;
+				varB[j] = (var[j] + var[0])/4;
+			}
+			for (int i = 0; i < design.length; i++) {
+				System.out.println("B"+(i+1)+": "+b[i]);
+				System.out.println("Standard deviation of B"+(i+1)+": "+Math.sqrt(varB[i]));
+			}
+			// Conclusion: the standard deviations of all the differences are significantly higher than 
+			// the measured differences themselves. This experiment indicates any of the measured factors alone won't
+			// change the length of the entry queue significantly, but joint effects may still exist.
 			op.terminate();
             Simulation.stop();
             SimulationProcess.mainResume();
